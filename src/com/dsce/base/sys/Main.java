@@ -97,7 +97,7 @@ public final class Main extends JPanel implements IFrameSize, IPause {
     }
 
     private void update(double deltaTime) {
-        game.update(deltaTime);
+        //game.update(deltaTime);
     }
 
     @Override public boolean isPause() {return pause;}
