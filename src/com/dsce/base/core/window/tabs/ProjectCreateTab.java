@@ -1,9 +1,12 @@
 package com.dsce.base.core.window.tabs;
 
 import com.dsce.base.core.Game;
+import com.dsce.base.core.contents.project.Project;
+import com.dsce.base.core.contents.project.ProjectType;
+import com.dsce.base.core.contents.project.internal.Engine;
+import com.dsce.base.core.contents.project.internal.Lang;
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.text.InputText;
-import com.dsce.base.sys.Main;
 import com.dsce.base.sys.input.InputHandler;
 import com.dsce.base.sys.mouse.Mouse;
 import com.dsce.base.utils.RenderU;
@@ -20,6 +23,7 @@ public class ProjectCreateTab extends Tab {
     private String tempLang = "py";
     private String tempGraphics = "vulkan";
     private String tempName = "default name";
+    private String tempType = "standard";
 
     public void clickEvent() {
         switch (step) {
@@ -103,13 +107,49 @@ public class ProjectCreateTab extends Tab {
                 }
                 break;
             case 4:
-                InputText.initLastInputWord();
                 if (buttonMap.get(projectCreateTabButtons[4][0]).isOnMouse()) {
+                    tempType = "prototype";
+                }
+                if (buttonMap.get(projectCreateTabButtons[4][1]).isOnMouse()) {
+                    tempType = "standard";
+                }
+                if (buttonMap.get(projectCreateTabButtons[4][2]).isOnMouse()) {
+                    tempType = "LTS";
+                }
+                if (buttonMap.get("projectCreateNext").isOnMouse()) {
+                    step++;
+                    InputHandler.setRequestInputTextForGameStringBuilder(true);
+                }
+                if (buttonMap.get("projectCreateBack").isOnMouse()) {
+                    step--;
+                    InputHandler.setRequestInputTextForGameStringBuilder(false);
+                }
+                break;
+            case 5:
+                InputText.initLastInputWord();
+                if (buttonMap.get(projectCreateTabButtons[5][0]).isOnMouse()) {
                     step = 0;
+                    Project p = new Project();
+                    p.registerName(tempName);
+                    p.registerCodeQuality(0.0f);
+                    p.registerGraphics(0.0f);
+                    p.registerFunny(0.0f);
+                    p.registerAddictive(0.0f);
+                    p.registerReleased(false);
+                    p.registerPrice(0.0f);
+                    p.registerOptimization(0.0f);
+                    p.registerStability(0.0f);
+                    p.registerFileSize(0);
+                    p.registerScale(0);
+                    p.registerProjectType(ProjectType.type.valueOf(tempType));
+                    p.registerProjectEngineType(Engine.type.valueOf(tempEngine));
+                    p.registerProjectGraphicsType(com.dsce.base.core.contents.project.internal.Graphics.type.valueOf(tempGraphics));
+                    p.registerProjectLangType(Lang.type.valueOf(tempLang));
+
+                    Game.addProject(p);
                 }
                 if (Mouse.g().x() >= 300 && Mouse.g().x() <= 300 + (1920 - 600) &&
                         Mouse.g().y() >= 300 && Mouse.g().y() <= 300 + 100) {
-
                     InputHandler.setRequestInputTextForGameStringBuilder(true);
                 }
                 if (buttonMap.get("projectCreateNext").isOnMouse()) {
@@ -188,6 +228,21 @@ public class ProjectCreateTab extends Tab {
                 RenderU.drawButton(g,buttonMap.get("projectCreateBack"),Color.green,Color.gray,Color.white,Color.black,32,"back",25);
                 break;
             case 4:
+                for (int i = 0; i < projectCreateTabStep4ButtonKeys.length; i++) {
+                    Button current = buttonMap.get(projectCreateTabStep4ButtonKeys[i]);
+                    RenderU.drawButton(g,current,Color.green,Color.gray,Color.white,Color.black,32,projectCreateTabStep4ButtonKeys[i],25);
+                }
+                g.setColor(Color.white);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,"Project Type Select",1920/2,185);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 64));
+                g.drawString("Selected Type : ",20,970);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,tempType,1920/2,920);
+                RenderU.drawButton(g,buttonMap.get("projectCreateNext"),Color.green,Color.gray,Color.white,Color.black,32,"next",25);
+                RenderU.drawButton(g,buttonMap.get("projectCreateBack"),Color.green,Color.gray,Color.white,Color.black,32,"back",25);
+                break;
+            case 5:
                 g.setColor(InputHandler.isRequestInputTextForGameStringBuilder()? Color.green : Color.white);
                 g.fillRect(300,300,1920-600,100);
                 g.setColor(Color.black);
@@ -195,7 +250,7 @@ public class ProjectCreateTab extends Tab {
                 RenderU.drawStringCenter(g,InputText.currentWord,(1920/2),350);
 
                 g.setColor(Color.white);
-                Button create = buttonMap.get(Game.projectCreateTabButtons[4][0]);
+                Button create = buttonMap.get(Game.projectCreateTabButtons[5][0]);
                 g2.setStroke(new BasicStroke(2f));
                 g.setColor(create.isOnMouse()? Color.green : Color.gray);
                 g.fillRect(create.getX(),create.getY(),create.getW(),create.getH());

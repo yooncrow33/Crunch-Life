@@ -1,5 +1,6 @@
 package com.dsce.base.core;
 
+import com.dsce.base.core.contents.project.Project;
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.graphics.Shutter;
 import com.dsce.base.core.window.Window;
@@ -8,11 +9,11 @@ import com.dsce.base.sys.mouse.IClickEvent;
 import com.dsce.base.utils.RenderU;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Game implements IClickEvent {
-
     public static Map<String, Button> buttonMap = new LinkedHashMap<>();
 
     String barButtonsKeys[] = {"newProject","projectManagement","docs","staff","breakroom","community"};
@@ -22,13 +23,28 @@ public class Game implements IClickEvent {
     public static String projectCreateTabStep1ButtonKeys[] = {"unity", "unreal", "godot", "libgdx", "lwjgl"};
     public static String projectCreateTabStep2ButtonKeys[] = {"c", "cpp", "rust", "java", "kotlin", "cs", "js", "py"};
     public static String projectCreateTabStep3ButtonKeys[] = {"vulkan", "opengl", "directx"};
-    public static String projectCreateTabStep4ButtonKeys[] = {"projectCreate"};
-    public static String[] projectCreateTabButtons[] = {projectCreateTabStep0ButtonKeys,projectCreateTabStep1ButtonKeys,projectCreateTabStep2ButtonKeys,projectCreateTabStep3ButtonKeys,projectCreateTabStep4ButtonKeys};
+    public static String projectCreateTabStep4ButtonKeys[] = {"prototype", "standard", "LTS"};
+    public static String projectCreateTabStep5ButtonKeys[] = {"projectCreate"};
+    public static String[] projectCreateTabButtons[] = {projectCreateTabStep0ButtonKeys,projectCreateTabStep1ButtonKeys,projectCreateTabStep2ButtonKeys,projectCreateTabStep3ButtonKeys,projectCreateTabStep4ButtonKeys,projectCreateTabStep5ButtonKeys};
 
     GameState.state state = GameState.state.night;
 
     final com.dsce.base.core.window.Window window = new Window();
     final Shutter shutter = new Shutter(this);
+
+    private static ArrayList<Project> projects = new ArrayList<>();
+
+    public static void addProject(Project p) {
+        projects.add(p);
+    }
+
+    public void setProjects(ArrayList<Project> projects) {
+        this.projects = projects;
+    }
+
+    public ArrayList<Project> getProjects() {
+        return projects;
+    }
 
     public Game() {
         Click.g().registerClickEventObject(this::clickEvent);
@@ -39,7 +55,7 @@ public class Game implements IClickEvent {
             buttonMap.put(barButtonsKeys[i],new Button(10+(i*260),1010,250,60));
         }
         for (int i = 0; i < projectCreateTabButtons.length; i++) {
-            if (i == 0 || i == 4) {
+            if (i == 0 || i == 5) {
                 buttonMap.put(projectCreateTabButtons[i][0],new Button(1920/2-150,1080-100-120,300,80));
             } else {
                 for (int ie = 0; ie < projectCreateTabButtons[i].length; ie++) {

@@ -3,6 +3,7 @@ package com.dsce.base.sys.input;
 import com.dsce.base.core.text.InputText;
 import com.dsce.base.sys.Main;
 import com.dsce.base.sys.ViewMetrics;
+import com.dsce.base.sys.file.FileManager;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -68,6 +69,8 @@ public class InputHandler extends KeyAdapter {
             if (requestInputTextForGameStringBuilder) {
                 InputText.inputKey('\b', 8);
             }
+            FileManager.save(main.game);
+            System.exit(0);
         }
         if (e.getKeyCode() == KeyEvent.VK_M) {
             viewMetrics.calculateViewMetrics();

@@ -1,6 +1,7 @@
 package com.dsce.base.sys;
 
 import com.dsce.base.core.Game;
+import com.dsce.base.sys.file.FileManager;
 import com.dsce.base.sys.input.InputHandler;
 import com.dsce.base.sys.mouse.Mouse;
 import com.dsce.base.sys.view.IFrameSize;
@@ -72,6 +73,8 @@ public final class Main extends JPanel implements IFrameSize, IPause {
 
 
         startGameLoop();
+
+        FileManager.load(game);
 
         frame.addKeyListener(inputHandler);
     }

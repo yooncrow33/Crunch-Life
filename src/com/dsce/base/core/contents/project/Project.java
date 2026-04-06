@@ -3,7 +3,6 @@ package com.dsce.base.core.contents.project;
 import com.dsce.base.core.contents.project.internal.Engine;
 import com.dsce.base.core.contents.project.internal.Graphics;
 import com.dsce.base.core.contents.project.internal.Lang;
-import com.dsce.base.core.contents.project.internal.Platform;
 
 public class Project {
     String name = "if you can see this word, it's a bug. please report to me about this bug. github: Crunch-Life";
@@ -21,7 +20,22 @@ public class Project {
     Engine.type projectEngineType = null;
     Graphics.type projectGraphicsType = null;
     Lang.type projectLangType = null;
-    Platform.type projectPlatformType = null;
+
+    public String getName() { return name; }
+    public float getCodeQuality() { return codeQuality; }
+    public float getGraphics() { return graphics; }
+    public float getFunny() { return funny; }
+    public float getAddictive() { return addictive; }
+    public boolean isReleased() { return released; }
+    public float getPrice() { return price; }
+    public float getOptimization() { return optimization; }
+    public float getStability() { return stability; }
+    public int getFileSize() { return fileSize; }
+    public int getScale() { return scale; }
+    public ProjectType.type getProjectType() { return projectType; }
+    public Engine.type getProjectEngineType() { return projectEngineType; }
+    public Graphics.type getProjectGraphicsType() { return projectGraphicsType; }
+    public Lang.type getProjectLangType() { return projectLangType; }
 
     public void registerName(String name) { this.name = name; }
     public void registerCodeQuality(float codeQuality) { this.codeQuality = codeQuality; }
@@ -38,4 +52,4 @@ public class Project {
     public void registerProjectEngineType(Engine.type projectEngineType) { this.projectEngineType = projectEngineType; }
     public void registerProjectGraphicsType(Graphics.type projectGraphicsType) { this.projectGraphicsType = projectGraphicsType; }
     public void registerProjectLangType(Lang.type projectLangType) { this.projectLangType = projectLangType; }
-    public void registerProjectPlatformType(Platform.type projectPlatformType) { this.projectPlatformType = projectPlatformType; }}
+}
