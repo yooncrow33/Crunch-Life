@@ -8,6 +8,4 @@ public abstract class InputExecutor {
     public abstract void keyReleasedExe(KeyEvent e);
     public abstract void scrollUpExe();
     public abstract void scrollDownExe();
-    public abstract void mouseClickExe();
-
 }

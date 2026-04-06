@@ -5,8 +5,8 @@ public class Engine {
         unity(0.8f, 0.5f, 0.1f),
         unreal(0.4f, 0.9f, 0.4f),
         godot(0.7f, 0.6f, 0.2f),
-        lwjgl(0.3f, 1.0f, 1.0f),
-        libGDX(0.6f, 0.7f, 0.3f);
+        libgdx(0.6f, 0.7f, 0.3f),
+        lwjgl(0.3f, 1.0f, 1.0f);
 
         float speed;
         float optimization;

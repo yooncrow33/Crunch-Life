@@ -19,13 +19,11 @@ public final class Main extends JPanel implements IFrameSize, IPause {
 
     private long lastTime;
 
-    private boolean isResizing = false;
-
     private boolean pause = false;
 
     private Console console = new Console();
 
-    private Game game = new Game();
+    public static Game game = new Game();
 
     public Console getConsole() {
         return console;

@@ -1,0 +1,215 @@
+package com.dsce.base.core.window.tabs;
+
+import com.dsce.base.core.Game;
+import com.dsce.base.core.graphics.Button;
+import com.dsce.base.core.text.InputText;
+import com.dsce.base.sys.Main;
+import com.dsce.base.sys.input.InputHandler;
+import com.dsce.base.sys.mouse.Mouse;
+import com.dsce.base.utils.RenderU;
+import com.dsce.base.utils.Utils;
+
+import java.awt.*;
+
+import static com.dsce.base.core.Game.*;
+
+public class ProjectCreateTab extends Tab {
+    public int step = 0;
+
+    private String tempEngine = "unity";
+    private String tempLang = "py";
+    private String tempGraphics = "vulkan";
+    private String tempName = "default name";
+
+    public void clickEvent() {
+        switch (step) {
+            case 0:
+                if (buttonMap.get(projectCreateTabButtons[0][0]).isOnMouse()) {
+                    step = 1;
+                }
+                break;
+            case 1:
+                if (buttonMap.get(projectCreateTabButtons[1][0]).isOnMouse()) {
+                    tempEngine = "unity";
+                }
+                if (buttonMap.get(projectCreateTabButtons[1][1]).isOnMouse()) {
+                    tempEngine = "unreal";
+                }
+                if (buttonMap.get(projectCreateTabButtons[1][2]).isOnMouse()) {
+                    tempEngine = "godot";
+                }
+                if (buttonMap.get(projectCreateTabButtons[1][3]).isOnMouse()) {
+                    tempEngine = "libgdx";
+                }
+                if (buttonMap.get(projectCreateTabButtons[1][4]).isOnMouse()) {
+                    tempEngine = "lwjgl";
+                }
+                if (buttonMap.get("projectCreateNext").isOnMouse()) {
+                    step++;
+                }
+                if (buttonMap.get("projectCreateBack").isOnMouse()) {
+                    step=0;
+                }
+                break;
+            case 2:
+                if (buttonMap.get(projectCreateTabButtons[2][0]).isOnMouse()) {
+                    tempLang = "c";
+                }
+                if (buttonMap.get(projectCreateTabButtons[2][1]).isOnMouse()) {
+                    tempLang = "cpp";
+                }
+                if (buttonMap.get(projectCreateTabButtons[2][2]).isOnMouse()) {
+                    tempLang = "rust";
+                }
+                if (buttonMap.get(projectCreateTabButtons[2][3]).isOnMouse()) {
+                    tempLang = "java";
+                }
+                if (buttonMap.get(projectCreateTabButtons[2][4]).isOnMouse()) {
+                    tempLang = "kotlin";
+                }
+                if (buttonMap.get(projectCreateTabButtons[2][5]).isOnMouse()) {
+                    tempLang = "cs";
+                }
+                if (buttonMap.get(projectCreateTabButtons[2][6]).isOnMouse()) {
+                    tempLang = "js";
+                }
+                if (buttonMap.get(projectCreateTabButtons[2][7]).isOnMouse()) {
+                    tempLang = "py";
+                }
+                if (buttonMap.get("projectCreateNext").isOnMouse()) {
+                    step++;
+                }
+                if (buttonMap.get("projectCreateBack").isOnMouse()) {
+                    step--;
+                }
+                break;
+            case 3:
+                if (buttonMap.get(projectCreateTabButtons[3][0]).isOnMouse()) {
+                    tempGraphics = "vulkan";
+                }
+                if (buttonMap.get(projectCreateTabButtons[3][1]).isOnMouse()) {
+                    tempGraphics = "opengl";
+                }
+                if (buttonMap.get(projectCreateTabButtons[3][2]).isOnMouse()) {
+                    tempGraphics = "directx";
+                }
+                if (buttonMap.get("projectCreateNext").isOnMouse()) {
+                    step++;
+                    InputHandler.setRequestInputTextForGameStringBuilder(true);
+                }
+                if (buttonMap.get("projectCreateBack").isOnMouse()) {
+                    step--;
+                    InputHandler.setRequestInputTextForGameStringBuilder(false);
+                }
+                break;
+            case 4:
+                InputText.initLastInputWord();
+                if (buttonMap.get(projectCreateTabButtons[4][0]).isOnMouse()) {
+                    step = 0;
+                }
+                if (Mouse.g().x() >= 300 && Mouse.g().x() <= 300 + (1920 - 600) &&
+                        Mouse.g().y() >= 300 && Mouse.g().y() <= 300 + 100) {
+
+                    InputHandler.setRequestInputTextForGameStringBuilder(true);
+                }
+                if (buttonMap.get("projectCreateNext").isOnMouse()) {
+                    step--;
+                    InputHandler.setRequestInputTextForGameStringBuilder(false);
+                }
+                break;
+            default:
+                System.err.println("Invalid Project Create Step Index: " + step);
+                System.err.println("Step Index Error! " + Utils.getReportMessage());
+        }
+    }
+
+    @Override
+    public void render(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        switch (step) {
+            case 0:
+                g.setColor(Color.white);
+                g.setFont(new Font(Font.MONOSPACED,Font.BOLD,140));
+                RenderU.drawStringCenter(g,"Create New Project!",(1920/2),350);
+
+                Button startButton = buttonMap.get(Game.projectCreateTabButtons[0][0]);
+                g2.setStroke(new BasicStroke(2f));
+                g.setColor(startButton.isOnMouse()? Color.green : Color.gray);
+                g.fillRect(startButton.getX(),startButton.getY(),startButton.getW(),startButton.getH());
+                g.setColor(Color.white);
+                g.drawRect(startButton.getX(),startButton.getY(),startButton.getW()-2,startButton.getH()-2);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 32));
+                g.setColor(Color.black);
+                RenderU.drawStringCenter(g,"Start",startButton.getX()+(startButton.getW()/2),startButton.getY()+32);
+                break;
+            case 1:
+                for (int i = 0; i < projectCreateTabStep1ButtonKeys.length; i++) {
+                    Button current = buttonMap.get(projectCreateTabStep1ButtonKeys[i]);
+                    RenderU.drawButton(g,current,Color.green,Color.gray,Color.white,Color.black,32,projectCreateTabStep1ButtonKeys[i],25);
+                }
+                g.setColor(Color.white);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,"Engine Select",1920/2,185);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 64));
+                g.drawString("Selected Engine : ",20,970);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,tempEngine,1920/2,920);
+                RenderU.drawButton(g,buttonMap.get("projectCreateNext"),Color.green,Color.gray,Color.white,Color.black,32,"next",25);
+                RenderU.drawButton(g,buttonMap.get("projectCreateBack"),Color.green,Color.gray,Color.white,Color.black,32,"back",25);
+                break;
+            case 2:
+                for (int i = 0; i < projectCreateTabStep2ButtonKeys.length; i++) {
+                    Button current = buttonMap.get(projectCreateTabStep2ButtonKeys[i]);
+                    RenderU.drawButton(g,current,Color.green,Color.gray,Color.white,Color.black,32,projectCreateTabStep2ButtonKeys[i],25);
+                }
+                g.setColor(Color.white);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,"Lang Select",1920/2,185);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 64));
+                g.drawString("Selected Lang : ",20,970);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,tempLang,1920/2,920);
+                RenderU.drawButton(g,buttonMap.get("projectCreateNext"),Color.green,Color.gray,Color.white,Color.black,32,"next",25);
+                RenderU.drawButton(g,buttonMap.get("projectCreateBack"),Color.green,Color.gray,Color.white,Color.black,32,"back",25);
+                break;
+            case 3:
+                for (int i = 0; i < projectCreateTabStep3ButtonKeys.length; i++) {
+                    Button current = buttonMap.get(projectCreateTabStep3ButtonKeys[i]);
+                    RenderU.drawButton(g,current,Color.green,Color.gray,Color.white,Color.black,32,projectCreateTabStep3ButtonKeys[i],25);
+                }
+                g.setColor(Color.white);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,"Graphics Select",1920/2,185);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 64));
+                g.drawString("Selected Graphics : ",20,970);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 82));
+                RenderU.drawStringCenter(g,tempGraphics,1920/2,920);
+                RenderU.drawButton(g,buttonMap.get("projectCreateNext"),Color.green,Color.gray,Color.white,Color.black,32,"next",25);
+                RenderU.drawButton(g,buttonMap.get("projectCreateBack"),Color.green,Color.gray,Color.white,Color.black,32,"back",25);
+                break;
+            case 4:
+                g.setColor(InputHandler.isRequestInputTextForGameStringBuilder()? Color.green : Color.white);
+                g.fillRect(300,300,1920-600,100);
+                g.setColor(Color.black);
+                g.setFont(new Font(Font.MONOSPACED,Font.BOLD,82));
+                RenderU.drawStringCenter(g,InputText.currentWord,(1920/2),350);
+
+                g.setColor(Color.white);
+                Button create = buttonMap.get(Game.projectCreateTabButtons[4][0]);
+                g2.setStroke(new BasicStroke(2f));
+                g.setColor(create.isOnMouse()? Color.green : Color.gray);
+                g.fillRect(create.getX(),create.getY(),create.getW(),create.getH());
+                g.setColor(Color.white);
+                g.drawRect(create.getX(),create.getY(),create.getW()-2,create.getH()-2);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 32));
+                g.setColor(Color.black);
+                RenderU.drawStringCenter(g,"Create",create.getX()+(create.getW()/2),create.getY()+32);
+                RenderU.drawButton(g,buttonMap.get("projectCreateNext"),Color.green,Color.gray,Color.white,Color.black,32,"back",25);
+                break;
+            default:
+                System.err.println("Invalid Project Create Step Index: " + step);
+                System.err.println("Step Index Error! " + Utils.getReportMessage());
+        }
+    }
+
+}

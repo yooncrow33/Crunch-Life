@@ -2,6 +2,7 @@ package com.dsce.base.core;
 
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.graphics.Shutter;
+import com.dsce.base.core.window.Window;
 import com.dsce.base.sys.mouse.Click;
 import com.dsce.base.sys.mouse.IClickEvent;
 import com.dsce.base.utils.RenderU;
@@ -12,21 +13,39 @@ import java.util.Map;
 
 public class Game implements IClickEvent {
 
-    Map<String, Button> buttonMap = new LinkedHashMap<>();
+    public static Map<String, Button> buttonMap = new LinkedHashMap<>();
 
-    String buttonsKeys[] = {"newProject","projectManagement","docs","staff","breakroom","community"};
-    String buttonLabels[] = {"New Project","Management","Docs","Staff","Break room","Community"};
+    String barButtonsKeys[] = {"newProject","projectManagement","docs","staff","breakroom","community"};
+    String barButtonLabels[] = {"New Project","Management","Docs","Staff","Break room","Community"};
+
+    public static String projectCreateTabStep0ButtonKeys[] = {"projectCreateStart"};
+    public static String projectCreateTabStep1ButtonKeys[] = {"unity", "unreal", "godot", "libgdx", "lwjgl"};
+    public static String projectCreateTabStep2ButtonKeys[] = {"c", "cpp", "rust", "java", "kotlin", "cs", "js", "py"};
+    public static String projectCreateTabStep3ButtonKeys[] = {"vulkan", "opengl", "directx"};
+    public static String projectCreateTabStep4ButtonKeys[] = {"projectCreate"};
+    public static String[] projectCreateTabButtons[] = {projectCreateTabStep0ButtonKeys,projectCreateTabStep1ButtonKeys,projectCreateTabStep2ButtonKeys,projectCreateTabStep3ButtonKeys,projectCreateTabStep4ButtonKeys};
 
     GameState.state state = GameState.state.night;
 
-    final Window window = new Window();
+    final com.dsce.base.core.window.Window window = new Window();
     final Shutter shutter = new Shutter(this);
 
     public Game() {
         Click.g().registerClickEventObject(this::clickEvent);
         buttonMap.put("commit",new Button(1920-310,1080-90,300,80));
-        for (int i = 0; i < buttonsKeys.length; i++) {
-            buttonMap.put(buttonsKeys[i],new Button(10+(i*260),1010,250,60));
+        buttonMap.put("projectCreateNext",new Button(1920-260,1080-70-100,250,60));
+        buttonMap.put("projectCreateBack",new Button(1920-260-260,1080-70-100,250,60));
+        for (int i = 0; i < barButtonsKeys.length; i++) {
+            buttonMap.put(barButtonsKeys[i],new Button(10+(i*260),1010,250,60));
+        }
+        for (int i = 0; i < projectCreateTabButtons.length; i++) {
+            if (i == 0 || i == 4) {
+                buttonMap.put(projectCreateTabButtons[i][0],new Button(1920/2-150,1080-100-120,300,80));
+            } else {
+                for (int ie = 0; ie < projectCreateTabButtons[i].length; ie++) {
+                    buttonMap.put(projectCreateTabButtons[i][ie],new Button((1920/2)-250,260+(ie*70),500,60));
+                }
+            }
         }
     }
 
@@ -36,14 +55,17 @@ public class Game implements IClickEvent {
 
     @Override
     public void clickEvent() {
-        for (int i = 0; i < buttonsKeys.length; i++) {
-            if (buttonMap.get(buttonsKeys[i]).isOnMouse()) {
+        for (int i = 0; i < barButtonsKeys.length; i++) {
+            if (buttonMap.get(barButtonsKeys[i]).isOnMouse()) {
                 window.windowTabIndex = i;
             }
         }
         if (state == GameState.state.day) {
             if (buttonMap.get("commit").isOnMouse()) {
                 shutter.changScreen(GameState.state.night);
+            }
+            if (window.windowTabIndex == 0) {
+                window.projectCreateTab.clickEvent();
             }
         } else if (state == GameState.state.night) {
             if (buttonMap.get("commit").isOnMouse()) {
@@ -91,20 +113,23 @@ public class Game implements IClickEvent {
             RenderU.drawStringCenter(g,"Commit",commitButton.getX()+(commitButton.getW()/2),commitButton.getY()+32);
             //buttons
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 24));
-            for (int i = 0; i < buttonsKeys.length; i++) {
-                Button currentButton = buttonMap.get(buttonsKeys[i]);
+            for (int i = 0; i < barButtonsKeys.length; i++) {
+                Button currentButton = buttonMap.get(barButtonsKeys[i]);
                 g.setColor(currentButton.isOnMouse()? Color.green : Color.gray);
                 g.fillRect(currentButton.getX(),currentButton.getY(),currentButton.getW(),currentButton.getH());
                 g.setColor(Color.white);
                 g.drawRect(currentButton.getX(),currentButton.getY(),currentButton.getW()-2,currentButton.getH()-2);
                 g.setColor(Color.black);
-                RenderU.drawStringCenter(g,buttonLabels[i],currentButton.getX()+(currentButton.getW()/2),currentButton.getY()+26);
+                RenderU.drawStringCenter(g, barButtonLabels[i],currentButton.getX()+(currentButton.getW()/2),currentButton.getY()+26);
             }
             //top bar
             g.setColor(Color.white);
             g.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 24));
-            g.drawString(buttonLabels[window.windowTabIndex]+ " Tab", 10,90);
+            g.drawString(barButtonLabels[window.windowTabIndex]+ " Tab", 10,90);
 
+
+            //window
+            window.render(g);
 
             //end
             g.setColor(Color.white);

@@ -34,7 +34,6 @@ public class MouseListener extends MouseAdapter implements MouseWheelListener {
     }
     @Override
     public void mousePressed(MouseEvent e) {
-        if (inputExecutor != null) { inputExecutor.mouseClickExe(); }
         Click.g().clickEvent();
     }
 }

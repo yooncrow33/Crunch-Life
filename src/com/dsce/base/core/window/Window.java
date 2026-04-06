@@ -1,18 +1,22 @@
-package com.dsce.base.core;
+package com.dsce.base.core.window;
 
-import com.dsce.base.core.contents.project.internal.Graphics;
+import com.dsce.base.core.window.tabs.ProjectCreateTab;
 import com.dsce.base.utils.Utils;
+
+import java.awt.*;
 
 public class Window {
     final int width = 1920;
     final int height = 880;
-    int windowTabIndex = 0;
+    public int windowTabIndex = 0;
+
+    public ProjectCreateTab projectCreateTab = new ProjectCreateTab();
 
     public void render(Graphics g) {
         switch (windowTabIndex) {
             case 0:
                 //new project
-
+                projectCreateTab.render(g);
                 break;
             case 1:
                 //project management
