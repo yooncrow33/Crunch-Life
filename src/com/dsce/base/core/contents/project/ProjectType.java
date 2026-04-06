@@ -4,6 +4,6 @@ public class ProjectType {
     public enum type {
         prototype,
         standard,
-        lts
+        LTS
     }
 }
