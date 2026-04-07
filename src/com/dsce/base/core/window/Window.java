@@ -1,5 +1,6 @@
 package com.dsce.base.core.window;
 
+import com.dsce.base.core.window.tabs.ManagementTab;
 import com.dsce.base.core.window.tabs.ProjectCreateTab;
 import com.dsce.base.utils.Utils;
 
@@ -11,6 +12,7 @@ public class Window {
     public int windowTabIndex = 0;
 
     public ProjectCreateTab projectCreateTab = new ProjectCreateTab();
+    public ManagementTab managementTab = new ManagementTab();
 
     public void render(Graphics g) {
         switch (windowTabIndex) {
@@ -20,7 +22,7 @@ public class Window {
                 break;
             case 1:
                 //project management
-
+                managementTab.render(g);
                 break;
             case 2:
                 //docs

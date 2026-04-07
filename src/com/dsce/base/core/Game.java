@@ -4,6 +4,7 @@ import com.dsce.base.core.contents.project.Project;
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.graphics.Shutter;
 import com.dsce.base.core.window.Window;
+import com.dsce.base.sys.file.FileManager;
 import com.dsce.base.sys.mouse.Click;
 import com.dsce.base.sys.mouse.IClickEvent;
 import com.dsce.base.utils.RenderU;
@@ -19,20 +20,12 @@ public class Game implements IClickEvent {
     String barButtonsKeys[] = {"newProject","projectManagement","docs","staff","breakroom","community"};
     String barButtonLabels[] = {"New Project","Management","Docs","Staff","Break room","Community"};
 
-    public static String projectCreateTabStep0ButtonKeys[] = {"projectCreateStart"};
-    public static String projectCreateTabStep1ButtonKeys[] = {"unity", "unreal", "godot", "libgdx", "lwjgl"};
-    public static String projectCreateTabStep2ButtonKeys[] = {"c", "cpp", "rust", "java", "kotlin", "cs", "js", "py"};
-    public static String projectCreateTabStep3ButtonKeys[] = {"vulkan", "opengl", "directx"};
-    public static String projectCreateTabStep4ButtonKeys[] = {"prototype", "standard", "LTS"};
-    public static String projectCreateTabStep5ButtonKeys[] = {"projectCreate"};
-    public static String[] projectCreateTabButtons[] = {projectCreateTabStep0ButtonKeys,projectCreateTabStep1ButtonKeys,projectCreateTabStep2ButtonKeys,projectCreateTabStep3ButtonKeys,projectCreateTabStep4ButtonKeys,projectCreateTabStep5ButtonKeys};
-
     GameState.state state = GameState.state.night;
 
     final com.dsce.base.core.window.Window window = new Window();
     final Shutter shutter = new Shutter(this);
 
-    private static ArrayList<Project> projects = new ArrayList<>();
+    public static ArrayList<Project> projects = new ArrayList<>();
 
     public static void addProject(Project p) {
         projects.add(p);
@@ -54,15 +47,7 @@ public class Game implements IClickEvent {
         for (int i = 0; i < barButtonsKeys.length; i++) {
             buttonMap.put(barButtonsKeys[i],new Button(10+(i*260),1010,250,60));
         }
-        for (int i = 0; i < projectCreateTabButtons.length; i++) {
-            if (i == 0 || i == 5) {
-                buttonMap.put(projectCreateTabButtons[i][0],new Button(1920/2-150,1080-100-120,300,80));
-            } else {
-                for (int ie = 0; ie < projectCreateTabButtons[i].length; ie++) {
-                    buttonMap.put(projectCreateTabButtons[i][ie],new Button((1920/2)-250,260+(ie*70),500,60));
-                }
-            }
-        }
+        FileManager.load();
     }
 
     public void update(double deltaTime) {

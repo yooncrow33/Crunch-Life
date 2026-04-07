@@ -19,16 +19,16 @@ public class FileManager {
     private static final String path = System.getProperty("user.home") + File.separator + ".dsce" + File.separator + "save" + File.separator + "save.properties";
 
     // 저장 메서드
-    public static void save(Game game) {
+    public static void save() {
         Properties p = new Properties();
-        ArrayList<Project> projects = game.getProjects(); // Game 클래스에 getProjects()가 있다고 가정
+        ArrayList<Project> projects = Game.projects; // Game 클래스에 getProjects()가 있다고 가정
 
         // 프로젝트 총 개수 저장
         p.setProperty("project_count", String.valueOf(projects.size()));
 
         for (int i = 0; i < projects.size(); i++) {
             Project pj = projects.get(i);
-            String prefix = i + "_";
+            String prefix = "project" + i + "_";
 
             p.setProperty(prefix + "name", pj.getName()); // 필드 접근을 위해 Getter가 필요합니다.
             p.setProperty(prefix + "codeQuality", String.valueOf(pj.getCodeQuality()));
@@ -61,7 +61,7 @@ public class FileManager {
     }
 
     // 로드 메서드
-    public static void load(Game game) {
+    public static void load() {
         Properties p = new Properties();
         File file = new File(path);
 
@@ -75,9 +75,9 @@ public class FileManager {
 
             for (int i = 0; i < count; i++) {
                 Project pj = new Project();
-                String prefix = i + "_";
+                String prefix = "project" + i + "_";
 
-                pj.registerName(p.getProperty(prefix + "name"));
+                pj.registerName(p.getProperty(prefix + "name", "broken name"));
                 pj.registerCodeQuality(Float.parseFloat(p.getProperty(prefix + "codeQuality", "0.0")));
                 pj.registerGraphics(Float.parseFloat(p.getProperty(prefix + "graphics", "0.0")));
                 pj.registerFunny(Float.parseFloat(p.getProperty(prefix + "funny", "0.0")));
@@ -104,12 +104,13 @@ public class FileManager {
                     if (lt != null) pj.registerProjectLangType(Lang.type.valueOf(lt));
                 } catch (IllegalArgumentException e) {
                     // Enum 값 변경 시 예외 처리
+                    System.err.println("Fail");
                 }
 
                 loadedProjects.add(pj);
             }
 
-            game.setProjects(loadedProjects); // Game 클래스에 setProjects()가 있다고 가정
+            Game.projects = loadedProjects; // Game 클래스에 setProjects()가 있다고 가정
 
         } catch (IOException | NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "로드 실패: " + e.getMessage());

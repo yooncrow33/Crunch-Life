@@ -18,6 +18,7 @@ public class Shutter {
     int height = 1100;
     boolean b = true; // 셔터 효과 사용 여부
 
+
     public boolean setScreenEffect(boolean use) {
         b = use;
         return b;

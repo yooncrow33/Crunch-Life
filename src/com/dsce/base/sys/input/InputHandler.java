@@ -69,7 +69,7 @@ public class InputHandler extends KeyAdapter {
             if (requestInputTextForGameStringBuilder) {
                 InputText.inputKey('\b', 8);
             }
-            FileManager.save(main.game);
+            FileManager.save();
             System.exit(0);
         }
         if (e.getKeyCode() == KeyEvent.VK_M) {

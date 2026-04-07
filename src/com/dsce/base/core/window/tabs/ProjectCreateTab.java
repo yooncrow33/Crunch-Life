@@ -25,6 +25,26 @@ public class ProjectCreateTab extends Tab {
     private String tempName = "default name";
     private String tempType = "standard";
 
+    public String projectCreateTabStep0ButtonKeys[] = {"projectCreateStart"};
+    public String projectCreateTabStep1ButtonKeys[] = {"unity", "unreal", "godot", "libgdx", "lwjgl"};
+    public String projectCreateTabStep2ButtonKeys[] = {"c", "cpp", "rust", "java", "kotlin", "cs", "js", "py"};
+    public String projectCreateTabStep3ButtonKeys[] = {"vulkan", "opengl", "directx"};
+    public String projectCreateTabStep4ButtonKeys[] = {"prototype", "standard", "LTS"};
+    public String projectCreateTabStep5ButtonKeys[] = {"projectCreate"};
+    public String[] projectCreateTabButtons[] = {projectCreateTabStep0ButtonKeys,projectCreateTabStep1ButtonKeys,projectCreateTabStep2ButtonKeys,projectCreateTabStep3ButtonKeys,projectCreateTabStep4ButtonKeys,projectCreateTabStep5ButtonKeys};
+
+    public ProjectCreateTab() {
+        for (int i = 0; i < projectCreateTabButtons.length; i++) {
+            if (i == 0 || i == 5) {
+                buttonMap.put(projectCreateTabButtons[i][0],new Button(1920/2-150,1080-100-120,300,80));
+            } else {
+                for (int ie = 0; ie < projectCreateTabButtons[i].length; ie++) {
+                    buttonMap.put(projectCreateTabButtons[i][ie],new Button((1920/2)-250,260+(ie*70),500,60));
+                }
+            }
+        }
+    }
+
     public void clickEvent() {
         switch (step) {
             case 0:
@@ -126,10 +146,10 @@ public class ProjectCreateTab extends Tab {
                 }
                 break;
             case 5:
-                InputText.initLastInputWord();
                 if (buttonMap.get(projectCreateTabButtons[5][0]).isOnMouse()) {
                     step = 0;
                     Project p = new Project();
+                    tempName=InputText.lastInputWord;
                     p.registerName(tempName);
                     p.registerCodeQuality(0.0f);
                     p.registerGraphics(0.0f);
@@ -147,6 +167,7 @@ public class ProjectCreateTab extends Tab {
                     p.registerProjectLangType(Lang.type.valueOf(tempLang));
 
                     Game.addProject(p);
+                    InputText.initLastInputWord();
                 }
                 if (Mouse.g().x() >= 300 && Mouse.g().x() <= 300 + (1920 - 600) &&
                         Mouse.g().y() >= 300 && Mouse.g().y() <= 300 + 100) {
@@ -172,7 +193,7 @@ public class ProjectCreateTab extends Tab {
                 g.setFont(new Font(Font.MONOSPACED,Font.BOLD,140));
                 RenderU.drawStringCenter(g,"Create New Project!",(1920/2),350);
 
-                Button startButton = buttonMap.get(Game.projectCreateTabButtons[0][0]);
+                Button startButton = buttonMap.get(projectCreateTabButtons[0][0]);
                 g2.setStroke(new BasicStroke(2f));
                 g.setColor(startButton.isOnMouse()? Color.green : Color.gray);
                 g.fillRect(startButton.getX(),startButton.getY(),startButton.getW(),startButton.getH());
@@ -250,7 +271,7 @@ public class ProjectCreateTab extends Tab {
                 RenderU.drawStringCenter(g,InputText.currentWord,(1920/2),350);
 
                 g.setColor(Color.white);
-                Button create = buttonMap.get(Game.projectCreateTabButtons[5][0]);
+                Button create = buttonMap.get(projectCreateTabButtons[5][0]);
                 g2.setStroke(new BasicStroke(2f));
                 g.setColor(create.isOnMouse()? Color.green : Color.gray);
                 g.fillRect(create.getX(),create.getY(),create.getW(),create.getH());

@@ -74,8 +74,6 @@ public final class Main extends JPanel implements IFrameSize, IPause {
 
         startGameLoop();
 
-        FileManager.load(game);
-
         frame.addKeyListener(inputHandler);
     }
 

@@ -37,7 +37,31 @@ public class Project {
     public Graphics.type getProjectGraphicsType() { return projectGraphicsType; }
     public Lang.type getProjectLangType() { return projectLangType; }
 
-    public void registerName(String name) { this.name = name; }
+    public void registerName(String name) {
+        if (name == null) throw new IllegalArgumentException("Project Name cannot be null!");
+        this.name = name;
+    }
+
+    public void registerProjectType(ProjectType.type projectType) {
+        if (projectType == null) throw new IllegalArgumentException("ProjectType cannot be null!");
+        this.projectType = projectType;
+    }
+
+    public void registerProjectEngineType(Engine.type projectEngineType) {
+        if (projectEngineType == null) throw new IllegalArgumentException("Engine Type cannot be null!");
+        this.projectEngineType = projectEngineType;
+    }
+
+    public void registerProjectGraphicsType(com.dsce.base.core.contents.project.internal.Graphics.type projectGraphicsType) {
+        if (projectGraphicsType == null) throw new IllegalArgumentException("Graphics Type cannot be null!");
+        this.projectGraphicsType = projectGraphicsType;
+    }
+
+    public void registerProjectLangType(Lang.type projectLangType) {
+        if (projectLangType == null) throw new IllegalArgumentException("Language Type cannot be null!");
+        this.projectLangType = projectLangType;
+    }
+
     public void registerCodeQuality(float codeQuality) { this.codeQuality = codeQuality; }
     public void registerGraphics(float graphics) { this.graphics = graphics; }
     public void registerFunny(float funny) { this.funny = funny; }
@@ -48,8 +72,4 @@ public class Project {
     public void registerStability(float stability) { this.stability = stability; }
     public void registerFileSize(int fileSize) { this.fileSize = fileSize; }
     public void registerScale(int scale) { this.scale = scale; }
-    public void registerProjectType(ProjectType.type projectType) { this.projectType = projectType; }
-    public void registerProjectEngineType(Engine.type projectEngineType) { this.projectEngineType = projectEngineType; }
-    public void registerProjectGraphicsType(Graphics.type projectGraphicsType) { this.projectGraphicsType = projectGraphicsType; }
-    public void registerProjectLangType(Lang.type projectLangType) { this.projectLangType = projectLangType; }
 }
