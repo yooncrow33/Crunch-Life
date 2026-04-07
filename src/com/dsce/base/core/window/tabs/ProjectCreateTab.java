@@ -265,7 +265,7 @@ public class ProjectCreateTab extends Tab {
                 break;
             case 5:
                 g.setColor(InputHandler.isRequestInputTextForGameStringBuilder()? Color.green : Color.white);
-                g.fillRect(300,300,1920-600,100);
+                g.fillRect(400,300,1920-800,100);
                 g.setColor(Color.black);
                 g.setFont(new Font(Font.MONOSPACED,Font.BOLD,82));
                 RenderU.drawStringCenter(g,InputText.currentWord,(1920/2),350);
@@ -287,5 +287,24 @@ public class ProjectCreateTab extends Tab {
                 System.err.println("Step Index Error! " + Utils.getReportMessage());
         }
     }
+    public static void addDummyProject() {
+        Project p = new Project();
+        p.registerName("dummy");
+        p.registerCodeQuality(0.0f);
+        p.registerGraphics(0.0f);
+        p.registerFunny(0.0f);
+        p.registerAddictive(0.0f);
+        p.registerReleased(false);
+        p.registerPrice(0.0f);
+        p.registerOptimization(0.0f);
+        p.registerStability(0.0f);
+        p.registerFileSize(0);
+        p.registerScale(0);
+        p.registerProjectType(ProjectType.type.valueOf("LTS"));
+        p.registerProjectEngineType(Engine.type.valueOf("lwjgl"));
+        p.registerProjectGraphicsType(com.dsce.base.core.contents.project.internal.Graphics.type.valueOf("opengl"));
+        p.registerProjectLangType(Lang.type.valueOf("cs"));
 
+        Game.addProject(p);
+    }
 }

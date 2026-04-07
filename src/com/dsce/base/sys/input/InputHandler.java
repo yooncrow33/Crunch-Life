@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 public class InputHandler extends KeyAdapter {
     private final ViewMetrics viewMetrics;
     private final Main main;
-    InputExecutor inputExecutor = null;
+    private static InputExecutor inputExecutor = null;
 
     private static boolean requestInputTextForGameStringBuilder = false;
 
@@ -24,8 +24,8 @@ public class InputHandler extends KeyAdapter {
         InputHandler.requestInputTextForGameStringBuilder = requestInputTextForGameStringBuilder;
     }
 
-    public void registerInputExecutor(InputExecutor inputExecutor) {
-        this.inputExecutor = inputExecutor;
+    public static void registerInputExecutor(InputExecutor inputExecutor1) {
+        inputExecutor = inputExecutor1;
     }
 
     public InputHandler(ViewMetrics viewMetrics, Main main) {

@@ -22,21 +22,15 @@ public class Game implements IClickEvent {
 
     GameState.state state = GameState.state.night;
 
-    final com.dsce.base.core.window.Window window = new Window();
+    public static final com.dsce.base.core.window.Window window = new Window();
     final Shutter shutter = new Shutter(this);
+
+    public GameInput gameInput = new GameInput();
 
     public static ArrayList<Project> projects = new ArrayList<>();
 
     public static void addProject(Project p) {
         projects.add(p);
-    }
-
-    public void setProjects(ArrayList<Project> projects) {
-        this.projects = projects;
-    }
-
-    public ArrayList<Project> getProjects() {
-        return projects;
     }
 
     public Game() {
@@ -68,6 +62,9 @@ public class Game implements IClickEvent {
             if (window.windowTabIndex == 0) {
                 window.projectCreateTab.clickEvent();
             }
+            if (window.windowTabIndex == 1) {
+                window.managementTab.clickEvent();
+            }
         } else if (state == GameState.state.night) {
             if (buttonMap.get("commit").isOnMouse()) {
                 shutter.changScreen(GameState.state.day);
@@ -81,6 +78,7 @@ public class Game implements IClickEvent {
         //backGround
         g.setColor(Color.black);
         g.fillRect(-5000,-5000,100000,1000000);
+
         if (state == GameState.state.night) {
             //interface
             g.setColor(darkBlue);
@@ -98,6 +96,10 @@ public class Game implements IClickEvent {
             RenderU.drawStringCenter(g,"Next Day",commitButton.getX()+(commitButton.getW()/2),commitButton.getY()+32);
 
         } else if (state == GameState.state.day) {
+
+            //window
+            window.render(g);
+
             //interface
             g.setColor(darkBlue);
             g.fillRect(0,0,1920,100);
@@ -127,10 +129,6 @@ public class Game implements IClickEvent {
             g.setColor(Color.white);
             g.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 24));
             g.drawString(barButtonLabels[window.windowTabIndex]+ " Tab", 10,90);
-
-
-            //window
-            window.render(g);
 
             //end
             g.setColor(Color.white);

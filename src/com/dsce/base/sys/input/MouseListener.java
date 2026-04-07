@@ -12,10 +12,10 @@ import java.awt.event.MouseWheelListener;
 
 public class MouseListener extends MouseAdapter implements MouseWheelListener {
 
-    InputExecutor inputExecutor = null;
+    private static InputExecutor inputExecutor = null;
 
-    public void registerInputExecutor(InputExecutor inputExecutor) {
-        this.inputExecutor = inputExecutor;
+    public static void registerInputExecutor(InputExecutor inputExecutor1) {
+        inputExecutor = inputExecutor1;
     }
 
     @Override
