@@ -1,5 +1,7 @@
 package com.dsce.base.sys.mouse;
 
+import com.dsce.base.core.popup.internal.PopupManager;
+
 import java.util.ArrayList;
 
 public class Click {
@@ -14,6 +16,10 @@ public class Click {
     private Click() {}
 
     public void clickEvent() {
+        if (PopupManager.requestFocus) {
+            PopupManager.clickEvent();
+            return;
+        }
         for (IClickEvent iClickEvent : clickEvents) {
             iClickEvent.clickEvent();
         }

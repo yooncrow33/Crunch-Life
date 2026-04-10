@@ -9,15 +9,18 @@ import java.awt.*;
 
 public class ManagementTab extends Tab {
 
-    public static int scrollY = 0;
-    public static int maxScrollY = 0;
+    private static int listScrollY = 0;
+    private static int maxListScrollY = 0;
+
+    private static int panelScrollY = 0;
+    private static final int maxPanelScrollY = 800;
 
     //public static Project selectedProject = Game.projects.get(0);
     public static int managementSelectedProjectIndex = 0;
 
     public void clickEvent() {
         for (int i = 0; i < Game.projects.size(); i++) {
-            if (100+scrollY+(i*50)<= Mouse.g().y()&&100+50+scrollY+(i*50)>=Mouse.g().y()) {
+            if (100+ listScrollY +(i*50)<= Mouse.g().y()&&100+50+ listScrollY +(i*50)>=Mouse.g().y()) {
                 //managementSelectedProject =  Game.projects.get(i);
                 managementSelectedProjectIndex = i;
             }
@@ -27,19 +30,21 @@ public class ManagementTab extends Tab {
     public void renderRight(Graphics g, int x) {
         Graphics2D g2 = (Graphics2D) g;
         g.setColor(new Color(25, 115, 175));
-        g.fillRect(x,100,1220,880);
+        g.fillRect(x,100+panelScrollY,1220,880);
         g2.setStroke(new BasicStroke(2f));
         g.setColor(Color.white);
-        g.drawRect(x,100,1220,880);
+        g.drawRect(x,100+panelScrollY,1220,880);
 
         Project selectedProject = Game.projects.get(managementSelectedProjectIndex);
 
         g.setFont(new Font(Font.MONOSPACED,Font.BOLD,92));
-        RenderU.drawStringCenter(g,selectedProject.getName(),x+(1220/2),180);
+        RenderU.drawStringCenter(g,selectedProject.getName(),x+(1220/2),180+panelScrollY);
 
         g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,48));
         RenderU.drawStringCenter(g,selectedProject.getProjectType().toString()+", "+selectedProject.getProjectEngineType()+", "+
-                selectedProject.getProjectLangType().toString()+", "+selectedProject.getProjectGraphicsType(),x+(1220/2),290);
+                selectedProject.getProjectLangType().toString()+", "+selectedProject.getProjectGraphicsType(),x+(1220/2),290+panelScrollY);
+
+
 
 
     }
@@ -59,19 +64,19 @@ public class ManagementTab extends Tab {
         for (int i = 0; i < Game.projects.size(); i++) {
             if (i==managementSelectedProjectIndex) {
                 g.setColor(Color.white);
-                g.fillRect(0, 100 + scrollY + (i * 50), 1920, 50);
+                g.fillRect(0, 100 + listScrollY + (i * 50), 1920, 50);
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
                 g.setColor(Color.blue);
-                g.drawString(Game.projects.get(i).getProjectType().toString(), 10, 100 + scrollY + (i * 50) + 35);
+                g.drawString(Game.projects.get(i).getProjectType().toString(), 10, 100 + listScrollY + (i * 50) + 35);
                 g.setColor(Color.black);
-                g.drawString("| " + Game.projects.get(i).getName(), 200, 100 + scrollY + (i * 50) + 35);
+                g.drawString("| " + Game.projects.get(i).getName(), 200, 100 + listScrollY + (i * 50) + 35);
             } else {
                 if ((i & 1) == 0) {
                     g.setColor(new Color(5, 100, 135));
                 } else {
                     g.setColor(new Color(25, 130, 185));
                 }
-                g.fillRect(0, 100 + scrollY + (i * 50), 1920, 50);
+                g.fillRect(0, 100 + listScrollY + (i * 50), 1920, 50);
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
             /*if (Game.projects.get(i).getProjectEngineType().toString() == null) {
                 System.err.println("project name is null");
@@ -81,28 +86,32 @@ public class ManagementTab extends Tab {
 
              */
                 g.setColor(Color.green);
-                g.drawString(Game.projects.get(i).getProjectType().toString(), 10, 100 + scrollY + (i * 50) + 35);
+                g.drawString(Game.projects.get(i).getProjectType().toString(), 10, 100 + listScrollY + (i * 50) + 35);
                 g.setColor(Color.white);
-                g.drawString("| " + Game.projects.get(i).getName(), 200, 100 + scrollY + (i * 50) + 35);
+                g.drawString("| " + Game.projects.get(i).getName(), 200, 100 + listScrollY + (i * 50) + 35);
             }
         }
         renderRight(g,700);
         //update
         if (Game.projects.size() >= 17) {
             int i = Game.projects.size() - 17;
-            maxScrollY = i*50;
+            maxListScrollY = i*50;
         }
     }
 
     public static void scrollUp() {
         if (Game.window.windowTabIndex != 1) return;
-        scrollY += 25;
-        if (scrollY > 0) scrollY = 0;
+        listScrollY += 25;
+        if (listScrollY > 0) listScrollY = 0;
+        panelScrollY += 25;
+        if (panelScrollY > 0) panelScrollY = 0;
     }
 
     public static void scrollUDown() {
         if (Game.window.windowTabIndex != 1) return;
-        scrollY -= 25;
-        if (scrollY < -maxScrollY) scrollY = -maxScrollY;
+        listScrollY -= 25;
+        if (listScrollY < -maxListScrollY) listScrollY = -maxListScrollY;
+        panelScrollY -= 25;
+        if (panelScrollY < -maxPanelScrollY) panelScrollY = -maxPanelScrollY;
     }
 }

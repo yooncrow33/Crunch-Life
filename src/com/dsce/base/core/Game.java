@@ -3,6 +3,8 @@ package com.dsce.base.core;
 import com.dsce.base.core.contents.project.Project;
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.graphics.Shutter;
+import com.dsce.base.core.popup.CommitPopup;
+import com.dsce.base.core.popup.internal.PopupManager;
 import com.dsce.base.core.window.Window;
 import com.dsce.base.sys.file.FileManager;
 import com.dsce.base.sys.mouse.Click;
@@ -23,15 +25,11 @@ public class Game implements IClickEvent {
     GameState.state state = GameState.state.night;
 
     public static final com.dsce.base.core.window.Window window = new Window();
-    final Shutter shutter = new Shutter(this);
+    public final Shutter shutter = new Shutter(this);
 
     public GameInput gameInput = new GameInput();
 
     public static ArrayList<Project> projects = new ArrayList<>();
-
-    public static void addProject(Project p) {
-        projects.add(p);
-    }
 
     public Game() {
         Click.g().registerClickEventObject(this::clickEvent);
@@ -41,6 +39,12 @@ public class Game implements IClickEvent {
         for (int i = 0; i < barButtonsKeys.length; i++) {
             buttonMap.put(barButtonsKeys[i],new Button(10+(i*260),1010,250,60));
         }
+
+        CommitPopup ndp = new CommitPopup(this,"Go to Next Day.","nightnp", GameState.state.day);
+        CommitPopup commitp = new CommitPopup(this,"Commit?", "daynp", GameState.state.night);
+
+
+        //end constructor
         FileManager.load();
     }
 
@@ -58,7 +62,7 @@ public class Game implements IClickEvent {
         }
         if (state == GameState.state.day) {
             if (buttonMap.get("commit").isOnMouse()) {
-                shutter.changScreen(GameState.state.night);
+                PopupManager.enablePopup("daynp");
             }
             if (window.windowTabIndex == 0) {
                 window.projectCreateTab.clickEvent();
@@ -68,7 +72,7 @@ public class Game implements IClickEvent {
             }
         } else if (state == GameState.state.night) {
             if (buttonMap.get("commit").isOnMouse()) {
-                shutter.changScreen(GameState.state.day);
+                PopupManager.enablePopup("nightnp");
             }
         }
     }
@@ -130,6 +134,9 @@ public class Game implements IClickEvent {
             g.setColor(Color.white);
             g.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 24));
             g.drawString(barButtonLabels[window.windowTabIndex]+ " Tab", 10,90);
+
+            //popup (temp)
+
 
             //end
             g.setColor(Color.white);

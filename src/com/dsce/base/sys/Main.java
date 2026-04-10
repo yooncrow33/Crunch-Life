@@ -1,7 +1,7 @@
 package com.dsce.base.sys;
 
 import com.dsce.base.core.Game;
-import com.dsce.base.sys.file.FileManager;
+import com.dsce.base.core.popup.internal.PopupManager;
 import com.dsce.base.sys.input.InputHandler;
 import com.dsce.base.sys.mouse.Mouse;
 import com.dsce.base.sys.view.IFrameSize;
@@ -25,6 +25,7 @@ public final class Main extends JPanel implements IFrameSize, IPause {
     private Console console = new Console();
 
     public static Game game = new Game();
+    PopupManager popupManager = new PopupManager();
 
     public Console getConsole() {
         return console;
@@ -98,6 +99,7 @@ public final class Main extends JPanel implements IFrameSize, IPause {
 
     private void update(double deltaTime) {
         game.update(deltaTime);
+        popupManager.update();
         Mouse.g().update(viewMetrics.getVirtualMouseX(), viewMetrics.getVirtualMouseY());
     }
 
@@ -116,6 +118,8 @@ public final class Main extends JPanel implements IFrameSize, IPause {
         d2.scale(viewMetrics.getCurrentScale(), viewMetrics.getCurrentScale());
 
         game.render(g);
+
+        popupManager.render(g);
 
         console.render(g);
 

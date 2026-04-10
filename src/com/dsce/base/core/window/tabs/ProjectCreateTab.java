@@ -176,7 +176,7 @@ public class ProjectCreateTab extends Tab {
                     p.registerProjectGraphicsType(com.dsce.base.core.contents.project.internal.Graphics.type.valueOf(tempGraphics));
                     p.registerProjectLangType(Lang.type.valueOf(tempLang));
 
-                    Game.addProject(p);
+                    Game.projects.add(p);
                     InputText.initLastInputWord();
                 }
                 if (Mouse.g().x() >= 300 && Mouse.g().x() <= 300 + (1920 - 600) &&
@@ -317,6 +317,6 @@ public class ProjectCreateTab extends Tab {
         p.registerProjectGraphicsType(com.dsce.base.core.contents.project.internal.Graphics.type.valueOf("opengl"));
         p.registerProjectLangType(Lang.type.valueOf("cs"));
 
-        Game.addProject(p);
+        projects.add(p);
     }
 }
