@@ -53,6 +53,7 @@ public class Game implements IClickEvent {
         for (int i = 0; i < barButtonsKeys.length; i++) {
             if (buttonMap.get(barButtonsKeys[i]).isOnMouse()) {
                 window.windowTabIndex = i;
+                window.init();
             }
         }
         if (state == GameState.state.day) {
