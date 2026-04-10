@@ -46,4 +46,37 @@ public class Window {
                 break;
         }
     }
+
+    public void init() {
+        switch (windowTabIndex) {
+            case 0:
+                //new project
+                projectCreateTab.init();
+                break;
+            case 1:
+                //project management
+
+                break;
+            case 2:
+                //docs
+
+                break;
+            case 3:
+                //staff
+
+                break;
+            case 4:
+                //break room
+
+                break;
+            case 5:
+                //community
+
+                break;
+            default:
+                System.err.println("Invalid Window Index: " + windowTabIndex);
+                System.err.println("Window Index Error! " + Utils.getReportMessage());
+                break;
+        }
+    }
 }

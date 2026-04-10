@@ -20,8 +20,8 @@ public class ProjectCreateTab extends Tab {
     public int step = 0;
 
     private String tempEngine = "unity";
-    private String tempLang = "py";
-    private String tempGraphics = "vulkan";
+    private String tempLang = "cs";
+    private String tempGraphics = "opengl";
     private String tempName = "default name";
     private String tempType = "standard";
 
@@ -43,6 +43,16 @@ public class ProjectCreateTab extends Tab {
                 }
             }
         }
+    }
+
+    public void init() {
+        int step = 0;
+
+        String tempEngine = "unity";
+        String tempLang = "cs";
+        String tempGraphics = "opengl";
+        String tempName = "default name";
+        String tempType = "standard";
     }
 
     public void clickEvent() {
