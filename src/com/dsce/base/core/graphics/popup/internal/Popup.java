@@ -1,4 +1,4 @@
-package com.dsce.base.core.popup.internal;
+package com.dsce.base.core.graphics.popup.internal;
 
 
 import com.dsce.base.core.graphics.Button;

@@ -1,8 +1,8 @@
-package com.dsce.base.core.popup;
+package com.dsce.base.core.graphics.popup;
 
 import com.dsce.base.core.Game;
 import com.dsce.base.core.GameState;
-import com.dsce.base.core.popup.internal.Popup;
+import com.dsce.base.core.graphics.popup.internal.Popup;
 
 public class CommitPopup extends Popup {
 

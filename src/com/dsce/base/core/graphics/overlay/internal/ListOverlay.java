@@ -11,9 +11,9 @@ public abstract class ListOverlay {
     int width = 500;
     int height = 390;
     final ArrayList<?  extends ArrList> list;
-    public int listScrollY;
+    public int listScrollY = 50;
     public int maxListScrollY = 0;
-    public int selectedIndex;
+    public int selectedIndex = 0;
     public boolean enabled = false;
     public String key;
 
@@ -29,14 +29,29 @@ public abstract class ListOverlay {
                 selectedIndex = i;
             }
         }
+        if (Mouse.g().x()>=OverlayManager.x+width-30&&Mouse.g().x()<=OverlayManager.x+width&&Mouse.g().y()>=OverlayManager.y&&Mouse.g().y()<=OverlayManager.y+30) {
+            OverlayManager.allDisabled();
+            OverlayManager.requestFocus = false;
+        }
+        if (Mouse.g().x()>=OverlayManager.x&&Mouse.g().x()<=OverlayManager.x+width&&Mouse.g().y()>=OverlayManager.y+350&&Mouse.g().y()<=OverlayManager.y+390) {
+            //exe
+            exe();
+            OverlayManager.allDisabled();
+            OverlayManager.requestFocus = false;
+        }
     }
     public void render(Graphics g) {
         if (list.size() >= 7) {
             int i = list.size() - 7;
             maxListScrollY = i*50;
+        } else {
+            maxListScrollY = 0;
         }
         g.setColor(Color.white);
-        g.fillRect(OverlayManager.x -2, OverlayManager.y -2,width+4,height+4);
+        g.fillRect(OverlayManager.x -5, OverlayManager.y -5,width+10,height+10);
+
+        g.setColor(Color.black);
+        g.fillRect(OverlayManager.x, OverlayManager.y,width,height);
 
         ((Graphics2D) g).setStroke(new BasicStroke(3f));
         g.setColor(Color.black);
@@ -74,26 +89,28 @@ public abstract class ListOverlay {
         g.fillRect(OverlayManager.x,OverlayManager.y,width,50);
         g.setColor(Color.blue);
         g.setFont(new Font(Font.MONOSPACED,Font.BOLD,40));
-        RenderU.drawStringCenter(g,"temp", OverlayManager.x+250,OverlayManager.y+18);
+        RenderU.drawStringCenter(g,"List Overly v0.1", OverlayManager.x+250,OverlayManager.y+18);
+
+        g.setColor(Color.red);
+        g.fillRect(OverlayManager.x+width-30,OverlayManager.y,30,30);
 
         g.setColor(Color.gray);
         g.fillRect(OverlayManager.x,OverlayManager.y+350,width,40);
         g.setColor(Color.blue);
         g.setFont(new Font(Font.MONOSPACED,Font.BOLD,35));
-        RenderU.drawStringCenter(g,"temp", OverlayManager.x+250,OverlayManager.y+350+15);
+        RenderU.drawStringCenter(g,"Execute!", OverlayManager.x+250,OverlayManager.y+350+15);
     }
 
     public void scrollUp() {
-        System.out.println("db");
         if (!enabled) return;
         listScrollY += 25;
-        if (listScrollY > -50) listScrollY = 50;
+        if (listScrollY >= 50) listScrollY = 50;
     }
 
     public void scrollUDown() {
         if (!enabled) return;
         listScrollY -= 25;
-        if (listScrollY < -maxListScrollY) listScrollY = -maxListScrollY;
+        if (listScrollY <= maxListScrollY) listScrollY = maxListScrollY;
     }
 
     public ArrList getCurrentValue() {

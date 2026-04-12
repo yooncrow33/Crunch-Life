@@ -157,6 +157,9 @@ public class ProjectCreateTab extends Tab {
                 break;
             case 5:
                 if (buttonMap.get(projectCreateTabButtons[5][0]).isOnMouse()) {
+                    if (InputText.lastInputWord.equals("null")) {
+                        return;
+                    }
                     step = 0;
                     Project p = new Project();
                     tempName=InputText.lastInputWord;

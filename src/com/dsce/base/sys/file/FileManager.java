@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class FileManager {
-    private static final String path = System.getProperty("user.home") + File.separator + ".dsce" + File.separator + "save" + File.separator + "save.Traits";
+    private static final String path = System.getProperty("user.home") + File.separator + ".dsce" + File.separator + "save.Traits";
 
     public static void save() {
         Properties p = new Properties();
@@ -51,6 +51,16 @@ public class FileManager {
             if (pj.getProjectLangType() != null) p.setProperty(prefix + "langType", pj.getProjectLangType().name());
         }
 
+
+        ArrayList<Team> teams = Game.teams;
+        p.setProperty("team_count", String.valueOf(teams.size()));
+
+        for (int i = 0; i < teams.size(); i++) {
+            Team t = teams.get(i);
+            String prefix = "team" + i + "_";
+            p.setProperty(prefix+"name", String.valueOf(t.getName()));
+        }
+
         ArrayList<Staff> staffs = Game.staffs;
         p.setProperty("staff_count", String.valueOf(staffs.size()));
 
@@ -60,16 +70,6 @@ public class FileManager {
             // Staff 클래스 내부에 정의된 저장 메서드 호출
             sf.saveToProperties(p, prefix);
         }
-
-        ArrayList<Team> teams = Game.teams;
-        p.setProperty("team_count", String.valueOf(staffs.size()));
-
-        for (int i = 0; i < staffs.size(); i++) {
-            Team t = teams.get(i);
-            String prefix = "team" + i + "_";
-            p.setProperty(prefix+"name", String.valueOf(t.getName()));
-        }
-
 
         // 폴더 생성 확인
         File file = new File(path);
@@ -134,8 +134,22 @@ public class FileManager {
                 loadedProjects.add(pj);
             }
 
-            ArrayList<Staff> staffs = Game.staffs;
-            p.getProperty("staff_count", String.valueOf(staffs.size()));
+            int tCount = Integer.parseInt(p.getProperty("team_count", "0"));
+            ArrayList<Team> loadedTeams = new ArrayList<>();
+
+            if (tCount==0) {
+                Team t = new Team();
+                t.registerName("Basic");
+                loadedTeams.add(t);
+            }
+
+            for (int i = 0; i < tCount; i++) {
+                Team t = new Team();
+                String prefix = "team" + i + "_";
+                t.registerName(p.getProperty(String.valueOf(prefix+"name")));
+                loadedTeams.add(t);
+            }
+            Game.teams = loadedTeams;
 
             int sCount = Integer.parseInt(p.getProperty("staff_count", "0"));
             ArrayList<Staff> loadedStaffs = new ArrayList<>();
@@ -148,16 +162,6 @@ public class FileManager {
                 loadedStaffs.add(sf);
             }
             Game.staffs = loadedStaffs;
-
-            int tCount = Integer.parseInt(p.getProperty("staff_count", "0"));
-            ArrayList<Team> loadedTeams = new ArrayList<>();
-
-            for (int i = 0; i < tCount; i++) {
-                Team t = new Team();
-                String prefix = "team" + i + "_";
-                t.registerName(p.getProperty(String.valueOf(prefix+"name")));
-            }
-            Game.teams = loadedTeams;
 
             Game.projects = loadedProjects;
 

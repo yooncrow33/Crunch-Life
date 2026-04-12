@@ -6,9 +6,11 @@ import com.dsce.base.core.contents.team.Team;
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.graphics.Shutter;
 import com.dsce.base.core.graphics.overlay.StaffListOverly;
+import com.dsce.base.core.graphics.overlay.TeamListOverlay;
 import com.dsce.base.core.graphics.overlay.internal.OverlayManager;
-import com.dsce.base.core.popup.CommitPopup;
-import com.dsce.base.core.popup.internal.PopupManager;
+import com.dsce.base.core.graphics.popup.CommitPopup;
+import com.dsce.base.core.graphics.popup.DismissPopup;
+import com.dsce.base.core.graphics.popup.internal.PopupManager;
 import com.dsce.base.core.window.Window;
 import com.dsce.base.sys.Console;
 import com.dsce.base.sys.file.FileManager;
@@ -55,11 +57,13 @@ public class Game implements IClickEvent {
 
         new CommitPopup(this,"Go to Next Day.","nightnp", GameState.state.day);
         new CommitPopup(this,"Commit?", "daynp", GameState.state.night);
+        new DismissPopup();
 
         //end constructor
         FileManager.load();
 
         new StaffListOverly("staff");
+        new TeamListOverlay("team");
     }
 
     public void update(double deltaTime) {
@@ -97,12 +101,11 @@ public class Game implements IClickEvent {
             }
         }
         if (state == GameState.state.day) {
-            OverlayManager.clickEvent();
             if (buttonMap.get("commit").isOnMouse()) {
                 PopupManager.enablePopup("daynp");
             }
             if (buttonMap.get("team").isOnMouse()) {
-                OverlayManager.enableListOverlay("staff");
+                //OverlayManager.enableListOverlay("staff");
             }
             if (window.windowTabIndex == 0) {
                 window.projectCreateTab.clickEvent();

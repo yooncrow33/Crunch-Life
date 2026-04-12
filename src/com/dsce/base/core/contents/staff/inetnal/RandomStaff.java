@@ -13,6 +13,7 @@ public class RandomStaff extends Staff {
     public RandomStaff() {
         registerName(Utils.getRandomName());
         registerXp((float)Math.random());
+        registerTeam("Basic");
 
         // --- Language Levels ---
         registercLevel((float)Math.random());

@@ -1,9 +1,11 @@
 package com.dsce.base.core.contents.staff;
 
+import com.dsce.base.core.Game;
 import com.dsce.base.core.contents.project.internal.Engine;
 import com.dsce.base.core.contents.project.internal.Graphics;
 import com.dsce.base.core.contents.project.internal.Lang;
 import com.dsce.base.core.contents.staff.inetnal.Trait;
+import com.dsce.base.core.contents.team.Team;
 import com.dsce.base.core.graphics.overlay.internal.ArrList;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ public class Staff implements ArrList {
     Lang.type langStack;
     Graphics.type graphicsStack;
 
-    String team;
+    String team = "Basic";
 
     public ArrayList<Trait> Traits = new ArrayList<>();
 
@@ -174,6 +176,7 @@ public class Staff implements ArrList {
         this.name = p.getProperty(prefix + "name", "Unknown Staff");
         this.xp = Float.parseFloat(p.getProperty(prefix + "xp", "0.0"));
         this.team = p.getProperty(prefix+"team","Basic");
+        loadTeam();
 
         this.cLevel = Float.parseFloat(p.getProperty(prefix + "cLevel", "0.0"));
         this.cppLevel = Float.parseFloat(p.getProperty(prefix + "cppLevel", "0.0"));
@@ -208,6 +211,14 @@ public class Staff implements ArrList {
         }
 
         updateStack(); // 로드 후 스택 갱신
+    }
+
+    public void loadTeam() {
+        for(Team t: Game.teams) {
+            if (t.getName().equals(team)) {
+                t.addStaffForTeam(this);
+            }
+        }
     }
 
     @Override

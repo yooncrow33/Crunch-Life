@@ -19,12 +19,14 @@ public class ManagementTab extends Tab {
     public static int managementSelectedProjectIndex = 0;
 
     public void clickEvent() {
-        for (int i = 0; i < Game.projects.size(); i++) {
-            if (100+ listScrollY +(i*50)<= Mouse.g().y()&&100+50+ listScrollY +(i*50)>=Mouse.g().y()) {
-                //managementSelectedProject =  Game.projects.get(i);
-                managementSelectedProjectIndex = i;
+        if (!(Mouse.g().x()>=700)) {
+            for (int i = 0; i < Game.projects.size(); i++) {
+                if (100+ listScrollY +(i*50)<= Mouse.g().y()&&100+50+ listScrollY +(i*50)>=Mouse.g().y()) {
+                    managementSelectedProjectIndex = i;
+                }
             }
         }
+
     }
 
     public void renderRight(Graphics g, int x) {

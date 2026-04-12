@@ -14,7 +14,7 @@ public class InputText {
     public static String lastInputWord = "";
     public static String currentWord = "";
 
-    public static void initLastInputWord() {lastInputWord = null;}
+    public static void initLastInputWord() {lastInputWord = "null";}
 
     public static void inputKey(char key, int code) {
         if (!InputHandler.isRequestInputTextForGameStringBuilder()) {

@@ -2,13 +2,12 @@ package com.dsce.base.sys;
 
 import com.dsce.base.core.Game;
 import com.dsce.base.core.graphics.overlay.internal.OverlayManager;
-import com.dsce.base.core.popup.internal.PopupManager;
+import com.dsce.base.core.graphics.popup.internal.PopupManager;
 import com.dsce.base.sys.input.InputHandler;
 import com.dsce.base.sys.mouse.Mouse;
 import com.dsce.base.sys.view.IFrameSize;
 import com.dsce.base.sys.view.IPause;
 import com.dsce.base.sys.input.MouseListener;
-import com.dsce.base.utils.RTraitOption;
 
 import javax.swing.*;
 import java.awt.*;

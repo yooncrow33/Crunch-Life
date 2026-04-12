@@ -21,6 +21,26 @@ public class Team implements ArrList {
         return name;
     }
 
+    public void addStaffForTeam(Staff s) {
+        for (Staff o : staffs) {
+            if (o==s) {
+                return;
+            }
+        }
+        staffs.add(s);
+        s.registerTeam(getName());
+    }
+
+    public void removeStaffForTeam(Staff s) {
+        for (int i = 0; i<staffs.size(); i++) {
+            Staff o = staffs.get(i);
+            if (o==s) {
+                staffs.remove(i);
+                s.registerTeam("Basic");
+            }
+        }
+    }
+
     @Override
     public String getLabel() {
         return getName();

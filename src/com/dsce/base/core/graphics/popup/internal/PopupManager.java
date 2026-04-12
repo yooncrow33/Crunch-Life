@@ -1,7 +1,4 @@
-package com.dsce.base.core.popup.internal;
-
-import com.dsce.base.sys.mouse.Click;
-import com.dsce.base.sys.mouse.IClickEvent;
+package com.dsce.base.core.graphics.popup.internal;
 
 import java.awt.*;
 

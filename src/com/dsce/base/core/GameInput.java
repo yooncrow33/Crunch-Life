@@ -23,12 +23,18 @@ public class GameInput extends com.dsce.base.sys.input.InputExecutor {
                 ProjectCreateTab.addDummyProject();
             }
         }
-    }
 
-    @Override
-    public void keyReleasedExe(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_F11) {
-            debug = false;
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            OverlayManager.addY(-40);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            OverlayManager.addX(-40);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            OverlayManager.addY(40);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            OverlayManager.addX(40);
         }
 
         if (e.getKeyCode() == KeyEvent.VK_S) {
@@ -39,6 +45,13 @@ public class GameInput extends com.dsce.base.sys.input.InputExecutor {
         }
         if (e.getKeyCode() == KeyEvent.VK_F) {
             StaffTab.refreshLaborMarket();
+        }
+    }
+
+    @Override
+    public void keyReleasedExe(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_F11) {
+            debug = false;
         }
     }
 
