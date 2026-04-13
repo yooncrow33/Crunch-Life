@@ -40,6 +40,8 @@ public class Staff implements ArrList {
     Lang.type langStack;
     Graphics.type graphicsStack;
 
+    protected boolean dummy = false;
+
     String team = "Basic";
 
     public ArrayList<Trait> Traits = new ArrayList<>();

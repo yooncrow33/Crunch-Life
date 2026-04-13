@@ -6,8 +6,8 @@ import com.dsce.base.core.contents.team.Team;
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.graphics.Shutter;
 import com.dsce.base.core.graphics.overlay.StaffListOverly;
-import com.dsce.base.core.graphics.overlay.TeamListOverlay;
-import com.dsce.base.core.graphics.overlay.internal.OverlayManager;
+import com.dsce.base.core.graphics.overlay.TeamChangeAtTeamTabListOverlay;
+import com.dsce.base.core.graphics.overlay.TeamChangeListOverlay;
 import com.dsce.base.core.graphics.popup.CommitPopup;
 import com.dsce.base.core.graphics.popup.DismissPopup;
 import com.dsce.base.core.graphics.popup.internal.PopupManager;
@@ -55,15 +55,15 @@ public class Game implements IClickEvent {
             buttonMap.put(barButtonsKeys[i],new Button(10+(i*260),1010,250,60));
         }
 
+        FileManager.load();
+
         new CommitPopup(this,"Go to Next Day.","nightnp", GameState.state.day);
         new CommitPopup(this,"Commit?", "daynp", GameState.state.night);
         new DismissPopup();
 
-        //end constructor
-        FileManager.load();
-
         new StaffListOverly("staff");
-        new TeamListOverlay("team");
+        new TeamChangeListOverlay("team");
+        new TeamChangeAtTeamTabListOverlay("teamat");
     }
 
     public void update(double deltaTime) {

@@ -86,7 +86,13 @@ public class FileManager {
         Properties p = new Properties();
         File file = new File(path);
 
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            Team t = new Team();
+            t.registerName("Basic");
+            Game.teams.add(t);
+            System.out.println("First Run");
+            return;
+        }
 
         try (FileInputStream in = new FileInputStream(path)) {
             p.load(in);

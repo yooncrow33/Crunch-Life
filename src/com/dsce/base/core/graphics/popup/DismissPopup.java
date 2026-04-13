@@ -14,6 +14,7 @@ public class DismissPopup extends Popup {
         Game.staffs.remove(StaffTab.selectedStaffIndex);
         for (Team t : Game.teams) {
             t.removeStaffForTeam(s);
+            StaffTab.selectedStaffIndex=0;
         }
     }
 

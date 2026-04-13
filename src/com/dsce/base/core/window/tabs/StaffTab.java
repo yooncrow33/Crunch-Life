@@ -26,7 +26,7 @@ public class StaffTab extends Tab {
         laborMarket;
     }
 
-    state tabState = state.company;
+    private static state tabState = state.company;
 
     private static ArrayList<RandomStaff> tempStaffs = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class StaffTab extends Tab {
     private static final int maxPanelScrollY = 800;
 
     public static int selectedStaffIndex = 0;
-    private static int selectedStaffAtTeam = 0;
+    public static int selectedStaffAtTeam = 0;
     public static int selectedTeamIndex = 0;
     public static int selectedTempStaffIndex = 0;
 
@@ -136,20 +136,37 @@ public class StaffTab extends Tab {
         } else if (tabState==state.team) {
             if (!(Mouse.g().x()>=700)) {
                 for (int i = 0; i < Game.teams.size(); i++) {
-                    if (100+ selectedTeamIndex +(i*50)<= Mouse.g().y()&&100+50+ selectedTeamIndex +(i*50)>=Mouse.g().y()) {
+                    if (100+ teamListScrollY +(i*50)<= Mouse.g().y()&&100+50+ teamListScrollY +(i*50)>=Mouse.g().y()) {
                         selectedTeamIndex = i;
+                        selectedStaffAtTeam = 0;
                     }
                 }
             } else {
                 for (int i = 0; i < Game.teams.get(selectedTeamIndex).staffs.size(); i++) {
-                    if (100+ selectedStaffAtTeam +(i*50)<= Mouse.g().y()&&100+50+ selectedStaffAtTeam +(i*50)>=Mouse.g().y()) {
+                    if (100+ staffAtTeamPanelListScrollY +(i*50)<= Mouse.g().y()&&100+50+ staffAtTeamPanelListScrollY +(i*50)>=Mouse.g().y()) {
                         selectedStaffAtTeam = i;
+                    }
+
+                    if (100+ staffAtTeamPanelListScrollY +(i*50)<= Mouse.g().y()&&100+50+ staffAtTeamPanelListScrollY +(i*50)>=Mouse.g().y() && Mouse.g().x()>=1700) {
+                        OverlayManager.enableListOverlay("teamat");
+                    } else if (100+ staffAtTeamPanelListScrollY +(i*50)<= Mouse.g().y()&&100+50+ staffAtTeamPanelListScrollY +(i*50)>=Mouse.g().y() && Mouse.g().x()>=1700-240&&Mouse.g().x()<=1700) {
+                        for (int ii = 0; ii<Game.staffs.size(); ii++) {
+                            if (Game.staffs.get(ii)==Game.teams.get(selectedTeamIndex).staffs.get(selectedStaffAtTeam)) {
+                                selectedStaffIndex = ii;
+                                tabState = state.company;
+                            }
+                        }
                     }
                 }
             }
             if (createTeam.isOnMouse()) {
                 if (InputText.lastInputWord.equals("null")) {
                     return;
+                }
+                for (Team tt: Game.teams) {
+                    if (tt.getName().equals(InputText.lastInputWord)) {
+                        return;
+                    }
                 }
                 Team t = new Team();
                 t.registerName(InputText.lastInputWord);
@@ -175,9 +192,6 @@ public class StaffTab extends Tab {
         RenderU.drawStringCenter(g,selectedProject.getName(),x+(1220/2),180+panelScrollY);
 
         g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,48));
-        //RenderU.drawStringCenter(g,selectedProject.getProjectType().toString()+", "+selectedProject.getProjectEngineType()+", "+
-          //      selectedProject.getProjectLangType().toString()+", "+selectedProject.getProjectGraphicsType(),x+(1220/2),290+panelScrollY);
-
         for (int i = 0; i<panelButtons.length; i++) {
             RenderU.drawScrollButton(g,panelButtons[i],Color.green,Color.gray,Color.white,Color.black,32,panelButtonLabels[i], 25);
         }
@@ -203,9 +217,20 @@ public class StaffTab extends Tab {
                     g.fillRect(x+0, 100 + staffAtTeamPanelListScrollY + (i * 50), 1220, 50);
                     g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
                     g.setColor(Color.blue);
-                    g.drawString(String.valueOf(Game.staffs.get(i).getTeam()), x+10, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.drawString(String.valueOf(Game.teams.get(selectedTeamIndex).staffs.get(i).getTeam()), x+10, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
                     g.setColor(Color.black);
-                    g.drawString("| " + Game.staffs.get(i).getName(), x+200, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.drawString("| " + Game.teams.get(selectedTeamIndex).staffs.get(i).getName(), x+200, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.setColor(Color.red);
+                    g.fillRect(x+1000, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
+                    g.setColor(Color.white);
+                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
+                    RenderU.drawStringCenter(g,"Change Team",x+1000+110,120 + staffAtTeamPanelListScrollY + (i * 50));
+
+                    g.setColor(Color.red);
+                    g.fillRect(x+1000-240, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
+                    g.setColor(Color.white);
+                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
+                    RenderU.drawStringCenter(g,"View in Staff Tab",x+1000-240+110,120 + staffAtTeamPanelListScrollY + (i * 50));
                 } else {
                     if ((i & 1) == 0) {
                         g.setColor(new Color(5, 100, 135));
@@ -214,18 +239,24 @@ public class StaffTab extends Tab {
                     }
                     g.fillRect(x+0, 100 + staffAtTeamPanelListScrollY + (i * 50), 1220, 50);
                     g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
-                /*if (Game.staffs.get(i).getProjectEngineType().toString() == null) {
-                    System.err.println("project name is null");
-                    System.out.println(Game.staffs.size());
-                    System.exit(0);
+
+                    g.setColor(Color.green);
+                    g.drawString(String.valueOf(Game.teams.get(selectedTeamIndex).staffs.get(i).getTeam()), x+10, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.setColor(Color.white);
+                    g.drawString("| " + Game.teams.get(selectedTeamIndex).staffs.get(i).getName(), x+200, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.setColor(Color.yellow);
+                    g.fillRect(x+1000, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
+                    g.setColor(Color.black);
+                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
+                    RenderU.drawStringCenter(g,"Change Team",x+1000+110,120 + staffAtTeamPanelListScrollY + (i * 50));
+
+                    g.setColor(Color.yellow);
+                    g.fillRect(x+1000-240, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
+                    g.setColor(Color.black);
+                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
+                    RenderU.drawStringCenter(g,"View in Staff Tab",x+1000-240+110,120 + staffAtTeamPanelListScrollY + (i * 50));
                 }
 
-                 */
-                    g.setColor(Color.green);
-                    g.drawString(String.valueOf(Game.staffs.get(i).getTeam()), x+10, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
-                    g.setColor(Color.white);
-                    g.drawString("| " + Game.staffs.get(i).getName(), x+200, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
-                }
             }
         }
 
@@ -267,15 +298,8 @@ public class StaffTab extends Tab {
                         }
                         g.fillRect(0, 100 + staffListScrollY + (i * 50), 1920, 50);
                         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
-                /*if (Game.staffs.get(i).getProjectEngineType().toString() == null) {
-                    System.err.println("project name is null");
-                    System.out.println(Game.staffs.size());
-                    System.exit(0);
-                }
-
-                 */
                         g.setColor(Color.green);
-                        g.drawString(String.valueOf(Game.staffs.get(i).getXp()), 10, 100 + staffListScrollY + (i * 50) + 35);
+                        g.drawString(String.valueOf(Game.staffs.get(i).getTeam()), 10, 100 + staffListScrollY + (i * 50) + 35);
                         g.setColor(Color.white);
                         g.drawString("| " + Game.staffs.get(i).getName(), 200, 100 + staffListScrollY + (i * 50) + 35);
                     }
@@ -298,53 +322,54 @@ public class StaffTab extends Tab {
                 g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 92));
                 RenderU.drawStringCenter(g, s.getName(), c, 210);
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 54));
-                RenderU.drawStringCenter(g, "Stacks :", c, 300);
+                if (!tempStaffs.get(i).isDummy()) {
+                    if (s.scan == 0) {
+                        RenderU.drawStringCenter(g, "?", c, 430 - 70);
+                        RenderU.drawStringCenter(g, "?", c, 490 - 70);
+                        RenderU.drawStringCenter(g, "?", c, 550 - 70);
 
-                if (s.scan == 0) {
-                    RenderU.drawStringCenter(g, "?", c, 430 - 70);
-                    RenderU.drawStringCenter(g, "?", c, 490 - 70);
-                    RenderU.drawStringCenter(g, "?", c, 550 - 70);
+                        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
+                        RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
+                        RenderU.drawStringCenter(g, "?", c, 580); // temp slot
+                        RenderU.drawStringCenter(g, "?", c, 630); // Trait y/n
+                        RenderU.drawStringCenter(g, "?", c, 680); // Trait
+                    } else if (s.scan == 1) {
+                        RenderU.drawStringCenter(g, s.getEngineStack().toString(), c, 430 - 70);
+                        RenderU.drawStringCenter(g, s.getLangStack().toString(), c, 490 - 70);
+                        RenderU.drawStringCenter(g, s.getGraphicsStack().toString(), c, 550 - 70);
 
-                    g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
-                    RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
-                    RenderU.drawStringCenter(g, "?", c, 580); // temp slot
-                    RenderU.drawStringCenter(g, "?", c, 630); // Trait y/n
-                    RenderU.drawStringCenter(g, "?", c, 680); // Trait
-                } else if (s.scan == 1) {
-                    RenderU.drawStringCenter(g, s.getEngineStack().toString(), c, 430 - 70);
-                    RenderU.drawStringCenter(g, s.getLangStack().toString(), c, 490 - 70);
-                    RenderU.drawStringCenter(g, s.getGraphicsStack().toString(), c, 550 - 70);
+                        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
+                        RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
+                        RenderU.drawStringCenter(g, "?", c, 580); // temp slot
+                        RenderU.drawStringCenter(g, "?", c, 630); // Trait y/n
+                        RenderU.drawStringCenter(g, "?", c, 680); // Trait
+                    } else if (s.scan == 2) {
+                        RenderU.drawStringCenter(g, s.getEngineStack().toString(), c, 430 - 70);
+                        RenderU.drawStringCenter(g, s.getLangStack().toString(), c, 490 - 70);
+                        RenderU.drawStringCenter(g, s.getGraphicsStack().toString(), c, 550 - 70);
 
-                    g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
-                    RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
-                    RenderU.drawStringCenter(g, "?", c, 580); // temp slot
-                    RenderU.drawStringCenter(g, "?", c, 630); // Trait y/n
-                    RenderU.drawStringCenter(g, "?", c, 680); // Trait
-                } else if (s.scan == 2) {
-                    RenderU.drawStringCenter(g, s.getEngineStack().toString(), c, 430 - 70);
-                    RenderU.drawStringCenter(g, s.getLangStack().toString(), c, 490 - 70);
-                    RenderU.drawStringCenter(g, s.getGraphicsStack().toString(), c, 550 - 70);
+                        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
+                        RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
+                        RenderU.drawStringCenter(g, "?", c, 580); // temp slot
+                        RenderU.drawStringCenter(g, "Have a Trait : " + s.isGetTrait, c, 630); // Trait y/n
+                        RenderU.drawStringCenter(g, "?", c, 680); // Trait
+                    } else if (s.scan == 3) {
+                        RenderU.drawStringCenter(g, s.getEngineStack().toString(), c, 430 - 70);
+                        RenderU.drawStringCenter(g, s.getLangStack().toString(), c, 490 - 70);
+                        RenderU.drawStringCenter(g, s.getGraphicsStack().toString(), c, 550 - 70);
 
-                    g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
-                    RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
-                    RenderU.drawStringCenter(g, "?", c, 580); // temp slot
-                    RenderU.drawStringCenter(g, "Have a Trait : " + s.isGetTrait, c, 630); // Trait y/n
-                    RenderU.drawStringCenter(g, "?", c, 680); // Trait
-                } else if (s.scan == 3) {
-                    RenderU.drawStringCenter(g, s.getEngineStack().toString(), c, 430 - 70);
-                    RenderU.drawStringCenter(g, s.getLangStack().toString(), c, 490 - 70);
-                    RenderU.drawStringCenter(g, s.getGraphicsStack().toString(), c, 550 - 70);
-
-                    g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
-                    RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
-                    RenderU.drawStringCenter(g, "?", c, 580); // temp slot
-                    RenderU.drawStringCenter(g, "Have a Trait : " + s.isGetTrait, c, 630); // Trait y/n
-                    for (int i2 = 0; i2 < s.getTraits().size(); i2++) {
-                        RenderU.drawStringCenter(g, "Trait : " + s.getTraits().get(i2).getName(), c, 680 + (i2 * 50)); // Trait
+                        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
+                        RenderU.drawStringCenter(g, "Asking Price :" + s.getLaborCost(), c, 530); // hope labor cost
+                        RenderU.drawStringCenter(g, "?", c, 580); // temp slot
+                        RenderU.drawStringCenter(g, "Have a Trait : " + s.isGetTrait, c, 630); // Trait y/n
+                        for (int i2 = 0; i2 < s.getTraits().size(); i2++) {
+                            RenderU.drawStringCenter(g, "Trait : " + s.getTraits().get(i2).getName(), c, 680 + (i2 * 50)); // Trait
+                        }
+                    } else {
+                        System.err.println("Labor Market Staff Scan Index Error! " + Utils.getReportMessage());
                     }
-                } else {
-                    System.err.println("Labor Market Staff Scan Index Error! " + Utils.getReportMessage());
                 }
+                RenderU.drawStringCenter(g, "Stacks :", c, 300);
             }
         } else if (tabState==state.team) {
             for (int i = 0; i < Game.teams.size(); i++) {
@@ -368,11 +393,10 @@ public class StaffTab extends Tab {
                     g.setColor(Color.green);
                     g.drawString(Game.teams.get(i).getName(), 10, 100 + teamListScrollY + (i * 50) + 35);
                     g.setColor(Color.white);
-                    g.drawString("| Scale : " + Game.teams.get(i).staffs.size(), 200, 100 + staffListScrollY + (i * 50) + 35);
+                    g.drawString("| Scale : " + Game.teams.get(i).staffs.size(), 200, 100 + teamListScrollY + (i * 50) + 35);
                 }
-                renderCreateTeamPanel(g,700);
-
             }
+            renderCreateTeamPanel(g,700);
         }
 
         if (tabState == state.company) {
@@ -410,17 +434,23 @@ public class StaffTab extends Tab {
         RenderU.drawStringCenter(g,"Labor Market", 1920/3+(1920/3)+(1920/3)/2,940);
 
         //update
-        if (Game.staffs.size() >= 17) {
-            int i = Game.staffs.size() - 17;
+        if (Game.staffs.size() >= 16) {
+            int i = Game.staffs.size() - 16;
             maxStaffListScrollY = i*50;
+        } else {
+            maxStaffListScrollY = 0;
         }
-        if (Game.teams.size() >= 17) {
-            int i = Game.teams.size() - 17;
+        if (Game.teams.size() >= 14) {
+            int i = Game.teams.size() - 14;
             maxTeamListScrollY = i*50;
+        } else {
+            maxTeamListScrollY = 0;
         }
-        if (Game.teams.get(selectedTeamIndex).staffs.size() >= 15) {
-            int i = Game.teams.get(selectedTeamIndex).staffs.size() - 15;
+        if (Game.teams.get(selectedTeamIndex).staffs.size() >= 14) {
+            int i = Game.teams.get(selectedTeamIndex).staffs.size() - 14;
             maxStaffAtTeamPanelListScrollY = i*50;
+        } else {
+            maxStaffAtTeamPanelListScrollY = 0;
         }
     }
 
@@ -434,12 +464,22 @@ public class StaffTab extends Tab {
 
     public static void scrollUp() {
         if (Game.window.windowTabIndex != 3) return;
-        if (Mouse.g().x()<=700) {
-            staffListScrollY += 25;
-            if (staffListScrollY > 0) staffListScrollY = 0;
-        } else {
-            panelScrollY += 25;
-            if (panelScrollY > 0) panelScrollY = 0;
+        if (tabState==state.company) {
+            if (Mouse.g().x()<=700) {
+                staffListScrollY += 25;
+                if (staffListScrollY > 0) staffListScrollY = 0;
+            } else {
+                panelScrollY += 25;
+                if (panelScrollY > 0) panelScrollY = 0;
+            }
+        } else if (tabState==state.team) {
+            if (Mouse.g().x()<=700) {
+                teamListScrollY += 25;
+                if (teamListScrollY > 0) teamListScrollY = 0;
+            } else {
+                staffAtTeamPanelListScrollY += 25;
+                if (staffAtTeamPanelListScrollY > 0) staffAtTeamPanelListScrollY = 0;
+            }
         }
     }
 
@@ -459,21 +499,33 @@ public class StaffTab extends Tab {
 
     public static void deal() {
         if (Game.window.windowTabIndex != 3) return;
+        if (!(tabState==state.laborMarket)) return;
+        if (tempStaffs.get(selectedTempStaffIndex).isDummy()) return;
         Game.staffs.add((Staff)tempStaffs.get(selectedTempStaffIndex));
         tempStaffs.get(selectedTempStaffIndex).loadTeam();
         tempStaffs.remove(selectedTempStaffIndex);
-        tempStaffs.add(new RandomStaff());
+        tempStaffs.add(new RandomStaff(true));
     }
 
     public static void scrollUDown() {
         if (Game.window.windowTabIndex != 3) return;
 
-        if (Mouse.g().x()<=700) {
-            staffListScrollY -= 25;
-            if (staffListScrollY < -maxStaffListScrollY) staffListScrollY = -maxStaffListScrollY;
-        } else {
-            panelScrollY -= 25;
-            if (panelScrollY < -maxPanelScrollY) panelScrollY = -maxPanelScrollY;
+        if (tabState==state.company) {
+            if (Mouse.g().x()<=700) {
+                staffListScrollY -= 25;
+                if (staffListScrollY < -maxStaffListScrollY) staffListScrollY = -maxStaffListScrollY;
+            } else {
+                panelScrollY -= 25;
+                if (panelScrollY < -maxPanelScrollY) panelScrollY = -maxPanelScrollY;
+            }
+        } else if (tabState==state.team) {
+            if (Mouse.g().x()<=700) {
+                teamListScrollY -= 25;
+                if (teamListScrollY < -maxTeamListScrollY) teamListScrollY = -maxTeamListScrollY;
+            } else {
+                staffAtTeamPanelListScrollY -= 25;
+                if (staffAtTeamPanelListScrollY < -maxStaffAtTeamPanelListScrollY) staffAtTeamPanelListScrollY = -maxStaffAtTeamPanelListScrollY;
+            }
         }
     }
 }
