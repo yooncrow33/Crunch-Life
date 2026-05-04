@@ -13,9 +13,13 @@ public class OverlayManager {
     private static int width = 500;
     private static int height = 390;
 
-    public static int x,y = 200;
+    public static int x = 200;
+    public static int y = 200;
+
+    private static double lerp = 0.08;
 
     public static boolean requestFocus = false;
+    public static boolean move = false;
 
     public static void setX(int xd) {
         x = xd;
@@ -51,6 +55,7 @@ public class OverlayManager {
         for (ListOverlay p : listOverlays.values()) {
             p.enabled = false;
             OverlayManager.requestFocus = false;
+            move = false;
         }
     }
 
@@ -69,6 +74,19 @@ public class OverlayManager {
                 p.clickEvent();
             }
         }
+    }
+
+    public static void update() {
+        if (!move) {return;}
+        follow(
+                Math.max(0, Math.min(Mouse.g().x(), 1920 - width)),
+                Math.max(0, Math.min(Mouse.g().y(), 1080 - height))
+        );
+    }
+
+    public static void follow(int targetX, int targetY) {
+        x += (int) ((targetX - 40 - x) * lerp);
+        y += (int) ((targetY - 40 - y) * lerp);
     }
 
     public static void checkBound() {

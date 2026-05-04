@@ -102,6 +102,7 @@ public final class Main extends JPanel implements IFrameSize, IPause {
     private void update(double deltaTime) {
         game.update(deltaTime);
         popupManager.update();
+        OverlayManager.update();
         Mouse.g().update(viewMetrics.getVirtualMouseX(), viewMetrics.getVirtualMouseY());
     }
 

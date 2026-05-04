@@ -23,9 +23,9 @@ public abstract class ListOverlay {
     }
 
     public void clickEvent() {
+        OverlayManager.move = false;
         for (int i = 0; i < list.size(); i++) {
             if (Mouse.g().x()>= OverlayManager.x &&Mouse.g().x()<= OverlayManager.x +width&& OverlayManager.y +listScrollY +(i*50)<= Mouse.g().y()&&50+ OverlayManager.y +listScrollY +(i*50)>=Mouse.g().y()) {
-                //managementSelectedProject =  list.get(i);
                 selectedIndex = i;
             }
         }
@@ -33,8 +33,10 @@ public abstract class ListOverlay {
             OverlayManager.allDisabled();
             OverlayManager.requestFocus = false;
         }
+        if (Mouse.g().x()>=OverlayManager.x+width-60&&Mouse.g().x()<=OverlayManager.x-30+width&&Mouse.g().y()>=OverlayManager.y&&Mouse.g().y()<=OverlayManager.y+30) {
+            OverlayManager.move = true;
+        }
         if (Mouse.g().x()>=OverlayManager.x&&Mouse.g().x()<=OverlayManager.x+width&&Mouse.g().y()>=OverlayManager.y+350&&Mouse.g().y()<=OverlayManager.y+390) {
-            //exe
             exe();
             OverlayManager.allDisabled();
             OverlayManager.requestFocus = false;
@@ -45,7 +47,7 @@ public abstract class ListOverlay {
             int i = list.size() - 7;
             maxListScrollY = i*50;
         } else {
-            maxListScrollY = 0;
+            maxListScrollY = 50;
         }
         g.setColor(Color.white);
         g.fillRect(OverlayManager.x -5, OverlayManager.y -5,width+10,height+10);
@@ -89,10 +91,12 @@ public abstract class ListOverlay {
         g.fillRect(OverlayManager.x,OverlayManager.y,width,50);
         g.setColor(Color.blue);
         g.setFont(new Font(Font.MONOSPACED,Font.BOLD,40));
-        RenderU.drawStringCenter(g,"List Overly v0.1", OverlayManager.x+250,OverlayManager.y+18);
+        RenderU.drawStringCenter(g,"List Overly", OverlayManager.x+250,OverlayManager.y+18);
 
         g.setColor(Color.red);
         g.fillRect(OverlayManager.x+width-30,OverlayManager.y,30,30);
+        g.setColor(Color.yellow);
+        g.fillRect(OverlayManager.x+width-60,OverlayManager.y,30,30);
 
         g.setColor(Color.gray);
         g.fillRect(OverlayManager.x,OverlayManager.y+350,width,40);

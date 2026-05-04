@@ -544,7 +544,7 @@ public class StaffTab extends Tab {
                 if (staffListScrollY < -maxStaffListScrollY) staffListScrollY = -maxStaffListScrollY;
             } else {
                 panelScrollY -= 25;
-                if (panelScrollY < -maxPanelScrollY) panelScrollY = -maxPanelScrollY;
+                if (panelScrollY <= -maxPanelScrollY) panelScrollY = -maxPanelScrollY;
             }
         } else if (tabState==state.team) {
             if (Mouse.g().x()<=700) {
