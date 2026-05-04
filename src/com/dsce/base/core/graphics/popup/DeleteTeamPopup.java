@@ -14,7 +14,7 @@ public class DeleteTeamPopup extends Popup {
         }
         for (int i = 0; i<Game.teams.size(); i++) {
             if (Game.teams.get(i).getName().equals(Game.teams.get(StaffTab.selectedTeamIndex).getName())) {
-                for (Staff s : Game.teams.get(StaffTab.selectedTeamIndex).staffs) {
+                for (Staff s : Game.teams.get(StaffTab.selectedTeamIndex).staffs.values()) {
                     s.registerTeam("Basic");
                     s.loadTeam();
                 }

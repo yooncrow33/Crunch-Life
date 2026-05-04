@@ -17,14 +17,10 @@ public class TeamChangeAtTeamTabListOverlay extends ListOverlay {
     @Override
     public void exe() {
         Team t = (Team) getCurrentValue();
-        Staff s = Game.teams.get(StaffTab.selectedTeamIndex).staffs.get(StaffTab.selectedStaffAtTeam);
-        for (Team tt : Game.teams) {
-            tt.removeStaffForTeam(s);
-            System.out.println(s.getName());
-        }
+        Staff s = Game.teams.get(StaffTab.selectedTeamIndex).staffs.get(StaffTab.selectedStaffIdAtTeam);
         t.addStaffForTeam(s);
-        System.out.println(s.getTeam());
-        StaffTab.selectedStaffAtTeam = 0;
+        s.registerTeam(t.getName());
+        StaffTab.selectedStaffIdAtTeam = "";
         StaffTab.selectedStaffIndex = 0;
         StaffTab.selectedTeamIndex = 0;
     }

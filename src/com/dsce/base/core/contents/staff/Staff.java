@@ -17,6 +17,16 @@ public class Staff implements ArrList {
 
     int laborCost;
 
+    public void registerId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    private String id;
+
     float cLevel;
     float cppLevel;
     float rustLevel;
@@ -140,6 +150,7 @@ public class Staff implements ArrList {
         p.setProperty(prefix + "name", name);
         p.setProperty(prefix + "xp", String.valueOf(xp));
         p.setProperty(prefix+"team", team);
+        p.setProperty(prefix+"id", id);
 
         // 언어 레벨
         p.setProperty(prefix + "cLevel", String.valueOf(cLevel));
@@ -178,6 +189,11 @@ public class Staff implements ArrList {
         this.name = p.getProperty(prefix + "name", "Unknown Staff");
         this.xp = Float.parseFloat(p.getProperty(prefix + "xp", "0.0"));
         this.team = p.getProperty(prefix+"team","Basic");
+        try {this.id = p.getProperty(prefix+"id"); }
+        catch (Exception e) {
+            System.err.println("Broken staff ID!");
+            System.exit(0);
+        }
         loadTeam();
 
         this.cLevel = Float.parseFloat(p.getProperty(prefix + "cLevel", "0.0"));

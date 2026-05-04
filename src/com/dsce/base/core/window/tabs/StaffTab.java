@@ -7,7 +7,6 @@ import com.dsce.base.core.contents.team.Team;
 import com.dsce.base.core.graphics.Button;
 import com.dsce.base.core.graphics.ScrollButton;
 import com.dsce.base.core.graphics.overlay.internal.OverlayManager;
-import com.dsce.base.core.graphics.popup.internal.Popup;
 import com.dsce.base.core.graphics.popup.internal.PopupManager;
 import com.dsce.base.core.text.InputText;
 import com.dsce.base.sys.input.InputHandler;
@@ -43,8 +42,10 @@ public class StaffTab extends Tab {
     private static int panelScrollY = 0;
     private static final int maxPanelScrollY = 800;
 
+    ArrayList<Staff> staffList;
+
     public static int selectedStaffIndex = 0;
-    public static int selectedStaffAtTeam = 0;
+    public static String selectedStaffIdAtTeam = "";
     public static int selectedTeamIndex = 0;
     public static int selectedTempStaffIndex = 0;
 
@@ -135,32 +136,43 @@ public class StaffTab extends Tab {
             if (t3.isOnMouse()) {
                 selectedTempStaffIndex = 2;
             }
-        } else if (tabState==state.team) {
-            if (!(Mouse.g().x()>=700)) {
-                for (int i = 0; i < Game.teams.size(); i++) {
-                    if (100+ teamListScrollY +(i*50)<= Mouse.g().y()&&100+50+ teamListScrollY +(i*50)>=Mouse.g().y()) {
-                        selectedTeamIndex = i;
-                        selectedStaffAtTeam = 0;
-                    }
+        } else if (tabState == state.team) {
+        if (!(Mouse.g().x() >= 700)) {
+            // 왼쪽 팀 리스트 선택
+            for (int i = 0; i < Game.teams.size(); i++) {
+                if (100 + teamListScrollY + (i * 50) <= Mouse.g().y() && 100 + 50 + teamListScrollY + (i * 50) >= Mouse.g().y()) {
+                    selectedTeamIndex = i;
+                    selectedStaffIdAtTeam = ""; // 팀이 바뀌면 선택 초기화
                 }
-            } else {
-                for (int i = 0; i < Game.teams.get(selectedTeamIndex).staffs.size(); i++) {
-                    if (100+ staffAtTeamPanelListScrollY +(i*50)<= Mouse.g().y()&&100+50+ staffAtTeamPanelListScrollY +(i*50)>=Mouse.g().y()) {
-                        selectedStaffAtTeam = i;
-                    }
+            }
+        } else {
+            Team currentTeam = Game.teams.get(selectedTeamIndex);
 
-                    if (100+ staffAtTeamPanelListScrollY +(i*50)<= Mouse.g().y()&&100+50+ staffAtTeamPanelListScrollY +(i*50)>=Mouse.g().y() && Mouse.g().x()>=1700) {
+            ArrayList<Staff> staffList = new ArrayList<>(currentTeam.staffs.values());
+
+            for (int i = 0; i < staffList.size(); i++) {
+                int yStart = 100 + staffAtTeamPanelListScrollY + (i * 50);
+                int yEnd = yStart + 50;
+
+                if (yStart <= Mouse.g().y() && yEnd >= Mouse.g().y()) {
+                    Staff clickedStaff = staffList.get(i);
+                    selectedStaffIdAtTeam = clickedStaff.getId(); // 고유 ID 저장
+
+                    if (Mouse.g().x() >= 1700) {
                         OverlayManager.enableListOverlay("teamat");
-                    } else if (100+ staffAtTeamPanelListScrollY +(i*50)<= Mouse.g().y()&&100+50+ staffAtTeamPanelListScrollY +(i*50)>=Mouse.g().y() && Mouse.g().x()>=1700-240&&Mouse.g().x()<=1700) {
-                        for (int ii = 0; ii<Game.staffs.size(); ii++) {
-                            if (Game.staffs.get(ii)==Game.teams.get(selectedTeamIndex).staffs.get(selectedStaffAtTeam)) {
+                    }
+                    else if (Mouse.g().x() >= 1700 - 240 && Mouse.g().x() <= 1700) {
+                        for (int ii = 0; ii < Game.staffs.size(); ii++) {
+                            if (Game.staffs.get(ii).getId().equals(selectedStaffIdAtTeam)) {
                                 selectedStaffIndex = ii;
                                 tabState = state.company;
+                                break;
                             }
                         }
                     }
                 }
             }
+        }
             if (createTeam.isOnMouse()) {
                 if (InputText.lastInputWord.equals("null")) {
                     return;
@@ -206,74 +218,83 @@ public class StaffTab extends Tab {
     public void renderCreateTeamPanel(Graphics g, int x) {
         Graphics2D g2 = (Graphics2D) g;
         g.setColor(new Color(25, 115, 175));
-        g.fillRect(x,100+panelScrollY,1220,880+800);
+        g.fillRect(x, 100 + panelScrollY, 1220, 880 + 800);
         g2.setStroke(new BasicStroke(2f));
         g.setColor(Color.white);
-        g.drawRect(x,100+panelScrollY,1220,880+800);
+        g.drawRect(x, 100 + panelScrollY, 1220, 880 + 800);
 
-        if (Game.teams.get(selectedTeamIndex).staffs.isEmpty()) {
+        // 현재 선택된 팀 가져오기
+        Team currentTeam = Game.teams.get(selectedTeamIndex);
+
+        if (currentTeam.staffs.isEmpty()) {
             g.setColor(Color.white);
-            g.setFont(new Font(Font.MONOSPACED,Font.BOLD,92));
-            RenderU.drawStringCenter(g,"Empty!",x+1220/2,300);
+            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 92));
+            RenderU.drawStringCenter(g, "Empty!", x + 1220 / 2, 300);
         } else {
-            for (int i = 0; i < Game.teams.get(selectedTeamIndex).staffs.size(); i++) {
-                if (i == selectedStaffAtTeam) {
+            int i = 0;
+            for (Staff staff : currentTeam.staffs.values()) {
+                boolean isSelected = staff.getId().equals(selectedStaffIdAtTeam);
+                int yPos = 100 + staffAtTeamPanelListScrollY + (i * 50);
+
+                if (isSelected) {
                     g.setColor(Color.white);
-                    g.fillRect(x+0, 100 + staffAtTeamPanelListScrollY + (i * 50), 1220, 50);
+                    g.fillRect(x, yPos, 1220, 50);
                     g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
+
                     g.setColor(Color.blue);
-                    g.drawString(String.valueOf(Game.teams.get(selectedTeamIndex).staffs.get(i).getTeam()), x+10, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.drawString(staff.getTeam(), x + 10, yPos + 35); // staff 객체에서 직접 호출
                     g.setColor(Color.black);
-                    g.drawString("| " + Game.teams.get(selectedTeamIndex).staffs.get(i).getName(), x+200, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.drawString("| " + staff.getName(), x + 200, yPos + 35);
+
+                    // 버튼들
                     g.setColor(Color.red);
-                    g.fillRect(x+1000, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
+                    g.fillRect(x + 1000, yPos + 5, 220, 40);
                     g.setColor(Color.white);
-                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
-                    RenderU.drawStringCenter(g,"Change Team",x+1000+110,120 + staffAtTeamPanelListScrollY + (i * 50));
+                    g.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 16));
+                    RenderU.drawStringCenter(g, "Change Team", x + 1000 + 110, yPos + 25);
 
                     g.setColor(Color.red);
-                    g.fillRect(x+1000-240, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
+                    g.fillRect(x + 1000 - 240, yPos + 5, 220, 40);
                     g.setColor(Color.white);
-                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
-                    RenderU.drawStringCenter(g,"View in Staff Tab",x+1000-240+110,120 + staffAtTeamPanelListScrollY + (i * 50));
+                    RenderU.drawStringCenter(g, "View in Staff Tab", x + 1000 - 240 + 110, yPos + 25);
                 } else {
                     if ((i & 1) == 0) {
                         g.setColor(new Color(5, 100, 135));
                     } else {
                         g.setColor(new Color(25, 130, 185));
                     }
-                    g.fillRect(x+0, 100 + staffAtTeamPanelListScrollY + (i * 50), 1220, 50);
+                    g.fillRect(x, yPos, 1220, 50);
                     g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
 
                     g.setColor(Color.green);
-                    g.drawString(String.valueOf(Game.teams.get(selectedTeamIndex).staffs.get(i).getTeam()), x+10, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
+                    g.drawString(staff.getTeam(), x + 10, yPos + 35);
                     g.setColor(Color.white);
-                    g.drawString("| " + Game.teams.get(selectedTeamIndex).staffs.get(i).getName(), x+200, 100 + staffAtTeamPanelListScrollY + (i * 50) + 35);
-                    g.setColor(Color.yellow);
-                    g.fillRect(x+1000, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
-                    g.setColor(Color.black);
-                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
-                    RenderU.drawStringCenter(g,"Change Team",x+1000+110,120 + staffAtTeamPanelListScrollY + (i * 50));
+                    g.drawString("| " + staff.getName(), x + 200, yPos + 35);
 
                     g.setColor(Color.yellow);
-                    g.fillRect(x+1000-240, 105 + staffAtTeamPanelListScrollY + (i * 50), 220, 40);
+                    g.fillRect(x + 1000, yPos + 5, 220, 40);
                     g.setColor(Color.black);
-                    g.setFont(new Font(Font.MONOSPACED,Font.ITALIC,16));
-                    RenderU.drawStringCenter(g,"View in Staff Tab",x+1000-240+110,120 + staffAtTeamPanelListScrollY + (i * 50));
+                    g.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 16));
+                    RenderU.drawStringCenter(g, "Change Team", x + 1000 + 110, yPos + 25);
+
+                    g.setColor(Color.yellow);
+                    g.fillRect(x + 1000 - 240, yPos + 5, 220, 40);
+                    g.setColor(Color.black);
+                    RenderU.drawStringCenter(g, "View in Staff Tab", x + 1000 - 240 + 110, yPos + 25);
                 }
-
+                i++;
             }
         }
 
-        RenderU.drawButton(g,de,Color.green,Color.gray,Color.white,Color.black,32,"Delete Team",25);
+        // 하단 버튼들 (Delete, Create 등)은 기존 코드 유지
+        RenderU.drawButton(g, de, Color.green, Color.gray, Color.white, Color.black, 32, "Delete Team", 25);
+        RenderU.drawButton(g, createTeam, Color.green, Color.gray, Color.white, Color.black, 32, "Create New Team!", 25);
 
-        RenderU.drawButton(g,createTeam,Color.green,Color.gray,Color.white,Color.black,32,"Create New Team!",25);
-
-        g.setColor(InputHandler.isRequestInputTextForGameStringBuilder()? Color.green : Color.white);
-        g.fillRect(x+20,100+730,1180-420,60);
+        g.setColor(InputHandler.isRequestInputTextForGameStringBuilder() ? Color.green : Color.white);
+        g.fillRect(x + 20, 100 + 730, 1180 - 420, 60);
         g.setColor(Color.black);
-        g.setFont(new Font(Font.MONOSPACED,Font.PLAIN,42));
-        RenderU.drawStringCenter(g,InputText.currentWord,x+(1220-420)/2,860);
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 42));
+        RenderU.drawStringCenter(g, InputText.currentWord, x + (1220 - 420) / 2, 860);
     }
 
     @Override

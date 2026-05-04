@@ -10,7 +10,7 @@ public class Utils {
     private static Random ran = new Random();
 
     public static String getReportMessage() {
-        return "please report to me about this bug. github: Crunch-Life";
+        return "please report to me about this bug. github: yooncrow33/Crunch-Life";
     }
 
     public static String getRandomName() {

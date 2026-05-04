@@ -18,9 +18,7 @@ public class TeamChangeListOverlay extends ListOverlay {
     public void exe() {
         Team t = (Team) getCurrentValue();
         Staff s = Game.staffs.get(StaffTab.selectedStaffIndex);
-        for (Team tt : Game.teams) {
-            tt.removeStaffForTeam(s);
-        }
         t.addStaffForTeam(s);
+        s.registerTeam(t.getName());
     }
 }

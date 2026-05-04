@@ -4,6 +4,8 @@ import com.dsce.base.core.contents.staff.Staff;
 import com.dsce.base.utils.RTraitOption;
 import com.dsce.base.utils.Utils;
 
+import java.util.UUID;
+
 public class RandomStaff extends Staff {
 
    public int scan = 0;
@@ -54,6 +56,7 @@ public class RandomStaff extends Staff {
         registerName(Utils.getRandomName());
         registerXp((float)Math.random());
         registerTeam("Basic");
+        registerId(UUID.randomUUID().toString());
 
         // --- Language Levels ---
         registercLevel((float)Math.random());

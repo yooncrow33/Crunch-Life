@@ -75,7 +75,7 @@ public class Game implements IClickEvent {
     public void registerStaffForTeam(Staff staff) {
         for (Team t:teams) {
             if (t.getName().equals(staff.getTeam())) {
-                t.staffs.add(staff);
+                t.staffs.put(staff.getName(), staff);
             }
         }
     }
